@@ -3,6 +3,7 @@
 - Hudson Henrique da Silva
 - João Vitor Pazinato Lucas
 - João Pedro Zen Sirino
+- Mateus Bonfim Track
 - Nícolas dos Santos Carvalho
 
 ## Introdução ao projeto
