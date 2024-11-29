@@ -1,46 +1,64 @@
-# Getting Started with Create React App
+# Frontend SAI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Esta pasta contém todo o código relacionado com o frontend do SAI
 
-## Available Scripts
+## Como Executar
 
-In the project directory, you can run:
+Para executar o sitema utiliza de Node.js junto das ferramentas de desenvolvimento do React
 
-### `npm start`
+## Prerequisitos
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [nodejs](https://nodejs.org) 18.19.0 or acima
+- [npm](https://npmjs.com) _geralmente instalado com o node_
+- [git](https://git-scm.com/) (opcional)
+- [python](https://python.org) (opcional)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Execcutando!
 
-### `npm test`
+Após a instalação do nodejs, é necessário clonar o repositorio
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```sh
+$ git clone https://github.com/andre-sch/forum.git
+```
 
-### `npm run build`
+Depois disso você pode ir para a pagina da webpage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```sh
+$ cd forum/webpage
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Agora você precisa instalar todas as depencias da aplicação, para isso execute:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```sh
+$ npm install
+# ou
+$ npm i
+```
 
-### `npm run eject`
+Após um tmepo o npm irá _baixar_ todas as dependências na pasta `node_modules`.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Com tudo configurado você poderá finalmente executar a webpage em modo desenvolvimento
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sh
+$ npm run start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Um servidor de desenvolvimento React será aberto em: `http://localhost:3000`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Compilando
 
-## Learn More
+Para Compilar a aplicação em uma página estática, você pode executar:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```sh
+$ npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+O React irá gerar uma pasta `/dist/` contendo a paginá compilada
+
+Para servir a página, há diversas maneiras, mas uma delas é executando um 
+http server com python. Como segue:
+
+```sh
+$ cd dist
+$ python3 -m http.server
+```
