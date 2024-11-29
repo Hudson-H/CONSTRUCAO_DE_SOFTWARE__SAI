@@ -35,7 +35,7 @@ $ npm install
 $ npm i
 ```
 
-Após um tmepo o npm irá _baixar_ todas as dependências na pasta `node_modules`.
+Após um tempo o npm irá _baixar_ todas as dependências na pasta `node_modules`.
 
 Com tudo configurado você poderá finalmente executar a webpage em modo desenvolvimento
 
