@@ -5,19 +5,19 @@ import (
 	"fmt"
 )
 
-type Example struct {
+type ExampleRepository struct {
 	db *sql.DB
 }
 
-func CreateExampleRepository(db *sql.DB) *Example {
-	er := Example{
+func CreateExampleRepository(db *sql.DB) *ExampleRepository {
+	er := ExampleRepository{
 		db: db,
 	}
 
 	return &er
 }
 
-func (er *Example) Teste() {
+func (er *ExampleRepository) Teste() {
 	res, err := er.db.Exec("select * from teste")
 
 	if err != nil {

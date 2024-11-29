@@ -1,5 +1,5 @@
 package model
 
 type Example struct {
-	nome string
+	Nome string `json:"nome"`
 }
