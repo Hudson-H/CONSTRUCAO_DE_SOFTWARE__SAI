@@ -1,3 +1,0 @@
-CREATE TABLE teste (
-    name VARCHAR(40) PRIMARY KEY
-);
