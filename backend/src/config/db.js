@@ -13,10 +13,6 @@ const db = mysql.createConnection({
 db.connect((err) => {
   if (err) {
     console.error('Erro ao conectar ao banco de dados:', err);
-    console.log(process.env.DB_HOST);
-    console.log(process.env.DB_USER);
-    console.log(process.env.DB_PASSWORD);
-    console.log(process.env.DB_NAME);   
     process.exit(1);
   }
   console.log('Conexão com o banco de dados estabelecida com sucesso.');
