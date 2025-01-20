@@ -1,10 +1,13 @@
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import './index.css';
 import { Index } from './views/index/Index';
+import { Root } from './components/organisms/Root/Root';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
-    <Route path="/" element={<Index/>}></Route>
+    <Route element={<Root />}>
+      <Route path="/" element={<Index/>}></Route>
+    </Route>
   </>)
 );
 
