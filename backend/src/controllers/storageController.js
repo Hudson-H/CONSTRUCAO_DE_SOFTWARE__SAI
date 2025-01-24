@@ -1,10 +1,11 @@
 const storageService = require('../services/storageService');
 
 const listarEstoque = async (req, res) => {
-  const filters = req.query;
+  const { id_item } = req.query;
+  console.log("Listando estoque, filtros recebidos:", req.query);
 
   try {
-    const estoque = await storageService.listarEstoque(filters);
+    const estoque = await storageService.listarEstoque({idItem: id_item ? parseInt(id_item) : undefined,});
     res.json(estoque);
   } catch (err) {
     console.error(err);

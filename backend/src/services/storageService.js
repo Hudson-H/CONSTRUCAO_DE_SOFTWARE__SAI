@@ -1,12 +1,14 @@
 const db = require('../config/db');  // Conexão com o banco de dados
 
-const listarEstoque = ({idItem}) => {
+const listarEstoque = ({ idItem } = {}) => {
   return new Promise((resolve, reject) => {
+    // Define a query com ou sem filtro
     const query = idItem
-    ? 'SELECT * FROM Estoque WHERE idItem = ?'
-    : 'SELECT * FROM Estoque';
-    
-    const params = idItem ? [idItem] : [];
+      ? 'SELECT * FROM Estoque WHERE ID_Item = ?'
+      : 'SELECT * FROM Estoque';
+    const params = idItem ? [idItem] : []; // Passa o filtro se necessário
+
+    console.log("Query executada:", query, "Parâmetros:", params); // Debug
 
     db.query(query, params, (err, results) => {
       if (err) {
@@ -16,6 +18,8 @@ const listarEstoque = ({idItem}) => {
     });
   });
 };
+
+
 
 const buscarEstoquePorID = (ID) => {
   return new Promise((resolve, reject) => {
