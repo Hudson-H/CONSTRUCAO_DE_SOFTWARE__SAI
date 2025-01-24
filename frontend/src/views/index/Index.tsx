@@ -5,5 +5,6 @@ import { Label } from "../../components/atoms/Label/Label";
 
 export function Index() {
     return <div className="">
+      a
     </div>
 }

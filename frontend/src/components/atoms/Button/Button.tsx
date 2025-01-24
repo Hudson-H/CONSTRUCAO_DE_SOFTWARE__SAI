@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { MouseEventHandler, ReactNode } from "react";
 
 const buttonColors = {
     "transparent": "bg-transparent",
@@ -14,21 +14,32 @@ type ButtonProps = {
     color: ButtonColorsType;
     children: ReactNode;
     icon?: ReactNode;
+
+    disabled?: boolean;
+    onClick?: MouseEventHandler<HTMLButtonElement>
     className?: string;
+
 };
 
 export default function Button({
     icon,
     color,
     className,
+    onClick,
+    disabled,
     children
 }: ButtonProps) {
-    return <button 
-        className={` 
+    return <button
+        className={`
             ${buttonColors[color]}
             py-1 px-2 rounded justify-start items-center gap-2 inline-flex overflow-hidden
+            hover:brightness-95
+            transition
+            ${disabled ? "cursor-wait bg-shark-950 bg-opacity-25" : ""}
             ${className??""}
         `}
+        onClick={onClick}
+        disabled={disabled}
     >
         { icon }
         { children }

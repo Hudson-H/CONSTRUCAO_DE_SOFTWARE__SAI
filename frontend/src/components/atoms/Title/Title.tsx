@@ -11,7 +11,7 @@ type TitleProps = {
 
 export function Title({ size, children, className }: TitleProps) {
   return <Label
-    size={size??"xl"}
+    size={size??"3xl"}
     color="black"
     className={`leading-normal font-display ${className}`}
     bold

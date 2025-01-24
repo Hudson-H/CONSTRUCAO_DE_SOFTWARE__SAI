@@ -2,11 +2,16 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import './index.css';
 import { Index } from './views/index/Index';
 import { Root } from './components/organisms/Root/Root';
+import { AuthRoot } from './components/organisms/AuthRoot/AuthRoot';
+import { Login } from './views/login/Login';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
+    <Route element={<AuthRoot />}>
+      <Route path="/login" element={<Login/>}></Route>
+    </Route>
     <Route element={<Root />}>
-      <Route path="/" element={<Index/>}></Route>
+      <Route path="/dashboard" element={<Index/>}></Route>
     </Route>
   </>)
 );
