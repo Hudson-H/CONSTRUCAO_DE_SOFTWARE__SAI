@@ -1,9 +1,10 @@
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import './index.css';
-import { Index } from './views/index/Index';
+import { Dashboard } from './views/dashboard/Dashboard';
 import { Root } from './components/organisms/Root/Root';
 import { AuthRoot } from './components/organisms/AuthRoot/AuthRoot';
 import { Login } from './views/login/Login';
+import { Cardapio } from './views/cardapio/Cardapio';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -11,7 +12,8 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login/>}></Route>
     </Route>
     <Route element={<Root />}>
-      <Route path="/dashboard" element={<Index/>}></Route>
+      <Route path="/dashboard" element={<Dashboard/>}></Route>
+      <Route path="/cardapio" element={<Cardapio/>}></Route>
     </Route>
   </>)
 );

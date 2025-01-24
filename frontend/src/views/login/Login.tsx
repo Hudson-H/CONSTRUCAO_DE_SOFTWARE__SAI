@@ -61,7 +61,8 @@ export function Login() {
             // {...register("email")}
             value={loginValue??""}
             onChange={ev => setValue("login", ev.target.value)}
-            placeholder="Insira seu email"
+            placeholder="Insira seu login"
+            className="font-light"
             borderless
           ></Input>
         </FormField>
@@ -73,16 +74,28 @@ export function Login() {
             value={passwordValue??""}
             onChange={ev => setValue("password", ev.target.value)}
             placeholder="Insira sua senha"
+            className="font-light"
             borderless
           ></Input>
         </FormField>
 
-        <Button
-          color="blue"
-          disabled={isSubmitting}
-        >
-          <Label className="w-full p-2">Login</Label>
-        </Button>
+        <div className="flex justify-end items-center w-full mt-2 gap-2">
+          <Button
+            color="white"
+            disabled={isSubmitting}
+            className="px-4"
+            outline
+          >
+            <Label light className="w-full">Registrar-se</Label>
+          </Button>
+          <Button
+            color="blue"
+            disabled={isSubmitting}
+            className="px-4"
+          >
+            <Label className="w-full">Entrar</Label>
+          </Button>
+        </div>
       </form>
     </Sidebar>
 

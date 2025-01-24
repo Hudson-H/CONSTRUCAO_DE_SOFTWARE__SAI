@@ -14,6 +14,7 @@ type ButtonProps = {
     color: ButtonColorsType;
     children: ReactNode;
     icon?: ReactNode;
+    outline?: boolean;
 
     disabled?: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement>
@@ -25,6 +26,7 @@ export default function Button({
     icon,
     color,
     className,
+    outline,
     onClick,
     disabled,
     children
@@ -35,6 +37,7 @@ export default function Button({
             py-1 px-2 rounded justify-start items-center gap-2 inline-flex overflow-hidden
             hover:brightness-95
             transition
+            ${outline ? "border-2 border-gray-300" : ""}
             ${disabled ? "cursor-wait bg-shark-950 bg-opacity-25" : ""}
             ${className??""}
         `}

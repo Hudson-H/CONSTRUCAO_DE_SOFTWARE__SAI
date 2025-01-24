@@ -26,7 +26,7 @@ export function Label({
 }: LabelProps) {
   return <span className={`
     ${bold && "font-medium"}
-    ${light && "font-extralight"}
+    ${light && "font-light"}
     ${italic && "italic"}
     ${pointer && "cursor-pointer"}
     ${textSizes[size??"base"]}

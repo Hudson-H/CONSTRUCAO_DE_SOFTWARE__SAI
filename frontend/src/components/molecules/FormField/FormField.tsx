@@ -21,8 +21,8 @@ export function FormField({ children, className, haveError, errorMessage }: Form
     {children}
 
     {haveError &&
-      <Spacer className="text-sm text-serenade-700 font-medium">
-        <span className="bg-serenade-700 bg-opacity-25 rounded-full px-2">!</span> &nbsp;
+      <Spacer className="text-sm text-red-600 font-medium">
+        <span className="bg-red-600 bg-opacity-25 rounded-full px-2">!</span> &nbsp;
         <Label color="red" size="sm" className="w-full text-left font-medium">{errorMessage}</Label>
       </Spacer>
     }

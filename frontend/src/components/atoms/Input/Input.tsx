@@ -27,7 +27,7 @@ export default function Input({ type, disabled, placeholder, value, borderless, 
       }
       ${!borderless && "border-2 border-silver-chalice-400 border-opacity-25 rounded-lg"}
       leading-normal tracking-wider font-roboto text-justify outline-none select-none
-      border-b
+      border-b-2
       ${className}
     `}
   />

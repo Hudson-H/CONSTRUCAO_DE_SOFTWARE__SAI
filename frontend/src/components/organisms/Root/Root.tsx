@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { Header } from "../Header/Header";
 import { PlusCircle, ListMagnifyingGlass, BookOpen, Package, UsersThree } from "@phosphor-icons/react";
@@ -8,22 +8,28 @@ import Button from "../../atoms/Button/Button";
 import { SAILogo } from "../../molecules/SAILogo/SAILogo";
 
 const sidebarButtons = [
-  { label: "Novo Pedido"  , icon: <PlusCircle size={24} /> },
-  { label: "Ver Pedidos"  , icon: <ListMagnifyingGlass size={24} /> },
-  { label: "Cardápio"     , icon: <BookOpen size={24} /> },
-  { label: "Estoque"      , icon: <Package size={24} /> },
-  { label: "Funcionários" , icon: <UsersThree size={24} /> },
+  { label: "Novo Pedido"  , icon: <PlusCircle size={24} />          , linkTo: "/pedidos/novo"},
+  { label: "Ver Pedidos"  , icon: <ListMagnifyingGlass size={24} /> , linkTo: "/pedidos"},
+  { label: "Cardápio"     , icon: <BookOpen size={24} />            , linkTo: "/cardapio"},
+  { label: "Estoque"      , icon: <Package size={24} />             , linkTo: "/estoque"},
+  { label: "Funcionários" , icon: <UsersThree size={24} />          , linkTo: "/funcionarios"},
 ]
 
 type SidebarButtonProps = {
   label: string;
+  linkTo: string;
   icon: ReactNode;
 }
 
-function SidebarButton({ label, icon }: SidebarButtonProps) {
-  return <Button color="transparent" icon={icon} className="px-0 py-2 w-full">
+function SidebarButton({ label, icon, linkTo }: SidebarButtonProps) {
+  return <Link to={linkTo} color="transparent" className="
+    py-2 px-0 rounded justify-start items-center gap-2 inline-flex overflow-hidden
+    hover:brightness-95
+    transition
+  ">
+    { icon }
     { label }
-  </Button>
+  </Link>
 }
 
 export function Root() {
@@ -40,7 +46,7 @@ export function Root() {
     </Sidebar>
     <Header />
 
-    <div className="col-span-10 px-4 py-2">
+    <div className="w-full h-full row-span-11 col-span-10 px-8 pb-8">
       <Outlet />
     </div>
   </div>
