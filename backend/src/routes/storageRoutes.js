@@ -10,7 +10,7 @@ router.get('/estoque/categoria/:id', storageController.buscarCategoriaEstoquePor
 router.get('/estoque/item', storageController.listarItensEstoque);
 router.get('/estoque/item/:id', storageController.buscarItemEstoquePorID);
 
-router.get('/estoque', storageController.listarEstoque); //n deu certo com o filtro
+router.get('/estoque', storageController.listarEstoque); 
 router.get('/estoque/:id', storageController.buscarEstoquePorID);
 router.post('/estoque', storageController.adicionarEstoque);
 router.patch('/estoque/:id', storageController.atualizarEstoque);

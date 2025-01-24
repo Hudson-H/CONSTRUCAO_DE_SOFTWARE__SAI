@@ -4,7 +4,7 @@ const listarEstoque = ({ idItem } = {}) => {
   return new Promise((resolve, reject) => {
     // Define a query com ou sem filtro
     const query = idItem
-      ? 'SELECT * FROM Estoque WHERE ID_Item = ?'
+      ? 'SELECT * FROM Estoque WHERE ID_Item = ? ORDER BY Data_Validade'
       : 'SELECT * FROM Estoque';
     const params = idItem ? [idItem] : []; // Passa o filtro se necessário
 
