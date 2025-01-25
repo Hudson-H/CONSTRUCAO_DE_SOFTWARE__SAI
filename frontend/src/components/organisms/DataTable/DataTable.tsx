@@ -9,6 +9,10 @@ type DataTableProps = {
   className?: string;
 }
 
+type DataTableHeaderProps = {
+  descriptor: DataTableDescriptor[];
+}
+
 type DataTableRowProps = {
   descriptor: DataTableDescriptor[];
   data: Record<string, string | number | Date>;
@@ -17,11 +21,29 @@ type DataTableRowProps = {
 export type DataTableDescriptor = {
   title: string;
   type: "text" | "number" | "date" | "action";
-  key?: string;
-  size: SpanSizeType;
+  key: string;
+  size: SpanSizeType | 0;
 
   action?: (event: MouseEvent) => void;
   icon?: ReactNode;
+}
+
+function DataTableHeader({
+  descriptor
+}: DataTableHeaderProps) {
+  return (
+    <div className="w-full grid grid-cols-12 items-center py-4 cursor-pointer">
+      {descriptor.map((item) => (
+        <Label
+          key={item.key}
+          className={SpanSize[item.size]}
+          bold
+        >
+          {item.title}
+        </Label>
+      ))}
+    </div>
+  )
 }
 
 function DataTableRow({
@@ -34,19 +56,13 @@ function DataTableRow({
         if (item.type === "action") {
           return (
             <div
-              key={item.title}
+              key={item.key}
               className={`inline-flex justify-end gap-2 ${item.size}`}
               >
               <div className="cursor-pointer" onClick={(ev) => {if (item.action) item.action(ev)}}>
                 {item.icon}
               </div>
             </div>
-          )
-        }
-
-        if (item.key === undefined) {
-          throw new Error(
-            "DataTableRow: atributo 'key' deve ser fornecido para itens que não são action"
           )
         }
 
@@ -78,7 +94,7 @@ export function DataTable({
         ${className}
       `}
     >
-      {/* <DataTableRow descriptor={descriptor} data={data[0]} /> */}
+      <DataTableHeader descriptor={descriptor}></DataTableHeader>
 
       {data.map((row, index) => (
         <DataTableRow key={index} descriptor={descriptor} data={row} />

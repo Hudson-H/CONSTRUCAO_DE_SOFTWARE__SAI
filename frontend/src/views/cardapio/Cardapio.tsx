@@ -4,39 +4,144 @@ import { Label } from "../../components/atoms/Label/Label";
 import { Title } from "../../components/atoms/Title/Title";
 import { useState } from "react";
 import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
+import { useSearchParams } from "react-router-dom";
 
-const categories = ["Item", "Seção", "Adicional"] as const;
+const categories = Object.freeze({
+  item: "Item",
+  secao: "Seção",
+  adicional: "Adicional"
+} as const);
 
-const sectionDescriptor: DataTableDescriptor[] = [
-  { title: "Nome", type: "text", size: 5, key: "nome" },
-  { title: "Descrição", type: "text", size: 6, key: "descricao" },
+const itemDescriptor: DataTableDescriptor[] = [
+  { title: "ID"         , type: "text" , size: 1 , key: "id" },
+  { title: "Nome"       , type: "text" , size: 3 , key: "nome" },
+  { title: "Descrição"  , type: "text" , size: 4 , key: "descricao" },
+  { title: "Estratégia" , type: "text" , size: 3 , key: "estrategia_controle" },
   {
-    title: "Ações",
+    title: "",
+    key: "edit",
     type: "action",
     size: 1,
     icon: <Pencil size={24} />,
     action: () => { console.log("Edit") }
   }
-]
+];
+const itemData = [
+  {
+    id: 0,
+    nome: "Item 1",
+    descricao: "Descrição do item 1",
+    estrategia_controle: "Controle 1"
+  },
+  {
+    id: 0,
+    nome: "Item 2",
+    descricao: "Descrição do item 2",
+    estrategia_controle: "Controle 2"
+  },
+  {
+    id: 0,
+    nome: "Item 3",
+    descricao: "Descrição do item 3",
+    estrategia_controle: "Controle 3"
+  }
+];
+
+const sectionDescriptor: DataTableDescriptor[] = [
+  { title: "ID"        , type: "text" , size: 1 , key: "id" },
+  { title: "Nome"      , type: "text" , size: 9 , key: "nome" },
+  {
+    title: "",
+    type: "action",
+    key: "edit",
+    size: 1,
+    icon: <Pencil size={24} />,
+    action: () => { console.log("Edit") }
+  },
+  {
+    title: "",
+    key: "delete",
+    type: "action",
+    size: 1,
+    icon: <Trash size={24} />,
+    action: () => { console.log("Edit") }
+  }
+];
+const sectionData = [
+  {
+    id: 0,
+    nome: "Seção 1",
+    descricao: "Descrição da seção 1"
+  },
+  {
+    id: 0,
+    nome: "Seção 2",
+    descricao: "Descrição da seção 2"
+  },
+  {
+    id: 0,
+    nome: "Seção 3",
+    descricao: "Descrição da seção 3"
+  }
+];
+
+const additionalDescriptor: DataTableDescriptor[] = [
+  { title: "ID"        , type: "text" , size: 1 , key: "id" },
+  { title: "Nome"      , type: "text" , size: 3 , key: "nome" },
+  { title: "Descrição" , type: "text" , size: 7 , key: "descricao" },
+  {
+    title: "",
+    key: "edit",
+    type: "action",
+    size: 1,
+    icon: <Pencil size={24} />,
+    action: () => { console.log("Edit") }
+  }
+];
+const additionalData = [
+  {
+    id: 0,
+    nome: "Adicional 1",
+    descricao: "Descrição do adicional 1"
+  },
+  {
+    id: 0,
+    nome: "Adicional 2",
+    descricao: "Descrição do adicional 2"
+  },
+  {
+    id: 0,
+    nome: "Adicional 3",
+    descricao: "Descrição do adicional 3"
+  }
+];
 
 export function Cardapio() {
-  const [category, setCategory] = useState<"Item" | "Seção" | "Adicional">(
-    "Item"
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [category, setCategory] = useState<keyof typeof categories>(
+    searchParams.get("category") as keyof typeof categories || "item"
   );
+
+  const changeCategory = (category: keyof typeof categories) => {
+    setSearchParams({["category"]: category});
+
+    setCategory(category);
+  }
 
   return (
     <div className="w-full h-full flex flex-col gap-4">
       <Title>Cardápio</Title>
 
       <div className="flex flex-row gap-4">
-        {categories.map(value =>
+        {Object.entries(categories).map(([key, value]) =>
           <Button
-            key={value}
+            key={key}
             className="px-4 py-2"
-            outline={category !== value}
-            color={category === value ? "gray" : "white"}
+            outline={category !== key}
+            color={category === key ? "gray" : "white"}
             onClick={() => {
-              setCategory(value)
+              changeCategory(key as keyof typeof categories);
             }}
           >
             {value}
@@ -45,29 +150,22 @@ export function Cardapio() {
       </div>
 
       <div className="flex flex-row items-center justify-between">
-        <Title>{category}</Title>
+        <Title>{categories[category]}</Title>
         <Button className="h-fit" color="blue">
           Novo
         </Button>
       </div>
 
       <DataTable
-        descriptor={sectionDescriptor}
+        descriptor={
+          category === "item" ? itemDescriptor :
+          category === "secao" ? sectionDescriptor :
+          additionalDescriptor
+        }
         data={
-          [
-            {
-              nome: "Seção 1",
-              descricao: "Descrição da seção 1"
-            },
-            {
-              nome: "Seção 2",
-              descricao: "Descrição da seção 2"
-            },
-            {
-              nome: "Seção 3",
-              descricao: "Descrição da seção 3"
-            }
-          ]
+          category === "item" ? itemData :
+          category === "secao" ? sectionData :
+          additionalData
         }
       ></DataTable>
     </div>
