@@ -31,28 +31,48 @@ const listarUsuarios = () => {
 
 const loginUsuario = (req, login, senha) => {
   return new Promise((resolve, reject) => {
+    // Consulta o usuário pelo login
     db.query('SELECT * FROM usuarios WHERE login = ?', [login], (err, results) => {
       if (err) {
-        reject('Erro ao buscar usuário: ' + err);
+        console.error('Erro ao buscar usuário:', err);
+        return reject('Erro ao buscar usuário no banco de dados.');
       }
+
       if (results.length === 0) {
-        reject('Usuário não encontrado.');
+        return reject('Usuário não encontrado.');
       }
+
       const user = results[0];
 
-      console.log("USER: ", results);
+      // Compara a senha fornecida com o hash no banco de dados
       bcrypt.compare(senha, user.senha, (err, result) => {
-        if (result) {
+        if (err) {
+          console.error('Erro ao validar senha:', err);
+          return reject('Erro ao validar senha.');
+        }
+
+        if (!result) {
+          return reject('Senha incorreta.');
+        }
+
+        // Armazena informações básicas do usuário na sessão
+        if (req.session) {
           req.session.user = {
             id: user.id,
             login: user.login,
-            senha: user.nome
+            nome: user.nome,
           };
-
-          resolve(user);
+          console.log('Usuário logado com sucesso:', req.session.user);
         } else {
-          reject('Senha incorreta.');
+          console.error('Sessão não configurada corretamente.');
+          return reject('Erro interno: sessão não inicializada.');
         }
+
+        resolve({
+          id: user.id,
+          login: user.login,
+          nome: user.nome,
+        });
       });
     });
   });
