@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Outlet } from "react-router-dom";
-import { Sidebar } from "../Sidebar/Sidebar";
+import { Sidebar } from "../../atoms/Sidebar/Sidebar";
 import { Header } from "../Header/Header";
 import { SAILogo } from "../../molecules/SAILogo/SAILogo";
 

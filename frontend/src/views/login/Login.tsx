@@ -1,7 +1,7 @@
 import { ChangeEvent, useContext, useState } from "react";
 import Input from "../../components/atoms/Input/Input";
 import { SAILogo } from "../../components/molecules/SAILogo/SAILogo";
-import { Sidebar } from "../../components/organisms/Sidebar/Sidebar";
+import { Sidebar } from "../../components/atoms/Sidebar/Sidebar";
 import { FormField } from "../../components/molecules/FormField/FormField";
 import { Label } from "../../components/atoms/Label/Label";
 import Button from "../../components/atoms/Button/Button";

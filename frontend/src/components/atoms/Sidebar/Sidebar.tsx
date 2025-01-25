@@ -1,9 +1,4 @@
-import React, { ReactNode } from "react"
-import { Label } from "../../atoms/Label/Label"
-import { BookOpen, Hamburger, ListMagnifyingGlass, Package, PlusCircle, UsersThree } from "@phosphor-icons/react";
-import { Title } from "../../atoms/Title/Title";
-import Button from "../../atoms/Button/Button";
-import { SAILogo } from "../../molecules/SAILogo/SAILogo";
+import { ReactNode } from "react"
 
 type SidebarProps = {
   className?: string;

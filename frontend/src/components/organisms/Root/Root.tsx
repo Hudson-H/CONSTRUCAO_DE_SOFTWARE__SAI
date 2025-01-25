@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Sidebar } from "../Sidebar/Sidebar";
+import { Sidebar } from "../../atoms/Sidebar/Sidebar";
 import { Header } from "../Header/Header";
 import { PlusCircle, ListMagnifyingGlass, BookOpen, Package, UsersThree } from "@phosphor-icons/react";
 import { Label } from "../../atoms/Label/Label";
@@ -22,7 +22,9 @@ type SidebarButtonProps = {
 }
 
 function SidebarButton({ label, icon, linkTo }: SidebarButtonProps) {
-  return <Link to={linkTo} color="transparent" className="
+  return <Link
+    key={label}
+    to={linkTo} color="transparent" className="
     py-2 px-0 rounded justify-start items-center gap-2 inline-flex overflow-hidden
     hover:brightness-95
     transition

@@ -3,8 +3,21 @@ import Button from "../../components/atoms/Button/Button";
 import { Label } from "../../components/atoms/Label/Label";
 import { Title } from "../../components/atoms/Title/Title";
 import { useState } from "react";
+import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
 
 const categories = ["Item", "Seção", "Adicional"] as const;
+
+const sectionDescriptor: DataTableDescriptor[] = [
+  { title: "Nome", type: "text", size: 5, key: "nome" },
+  { title: "Descrição", type: "text", size: 6, key: "descricao" },
+  {
+    title: "Ações",
+    type: "action",
+    size: 1,
+    icon: <Pencil size={24} />,
+    action: () => { console.log("Edit") }
+  }
+]
 
 export function Cardapio() {
   const [category, setCategory] = useState<"Item" | "Seção" | "Adicional">(
@@ -18,6 +31,7 @@ export function Cardapio() {
       <div className="flex flex-row gap-4">
         {categories.map(value =>
           <Button
+            key={value}
             className="px-4 py-2"
             outline={category !== value}
             color={category === value ? "gray" : "white"}
@@ -37,42 +51,25 @@ export function Cardapio() {
         </Button>
       </div>
 
-      <div
-        className="
-      w-full h-full px-5 py-2
-      border-2 rounded
-    "
-      >
-        <div className="w-full grid grid-cols-12 items-center py-4">
-          <Label className="col-span-11" light>
-            Lanches
-          </Label>
-          <div className="inline-flex justify-end gap-2 col-span-1">
-            <Pencil className="cursor-pointer" size={24} />
-            <Trash className="cursor-pointer text-red-600" size={24} />
-          </div>
-        </div>
-
-        <div className="w-full grid grid-cols-12 items-center py-4">
-          <Label className="col-span-11" light>
-            Bebidas
-          </Label>
-          <div className="inline-flex justify-end gap-2 col-span-1">
-            <Pencil className="cursor-pointer" size={24} />
-            <Trash className="cursor-pointer text-red-600" size={24} />
-          </div>
-        </div>
-
-        <div className="w-full grid grid-cols-12 items-center py-4">
-          <Label className="col-span-11" light>
-            Porções
-          </Label>
-          <div className="inline-flex justify-end gap-2 col-span-1">
-            <Pencil className="cursor-pointer" size={24} />
-            <Trash className="cursor-pointer text-red-600" size={24} />
-          </div>
-        </div>
-      </div>
+      <DataTable
+        descriptor={sectionDescriptor}
+        data={
+          [
+            {
+              nome: "Seção 1",
+              descricao: "Descrição da seção 1"
+            },
+            {
+              nome: "Seção 2",
+              descricao: "Descrição da seção 2"
+            },
+            {
+              nome: "Seção 3",
+              descricao: "Descrição da seção 3"
+            }
+          ]
+        }
+      ></DataTable>
     </div>
   );
 }
