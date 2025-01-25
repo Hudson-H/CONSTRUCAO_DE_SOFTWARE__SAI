@@ -7,5 +7,6 @@ router.get('/funcionarios', employeeController.listarFuncionarios);
 router.get('/funcionarios/:id', employeeController.buscarFuncionarioPorID);
 router.post('/funcionarios', employeeController.adicionarFuncionario);
 router.patch('/funcionarios/:id', employeeController.atualizarFuncionario);
+router.delete('/funcionarios/:id', employeeController.deletarFuncionario);
 
 module.exports = router;
