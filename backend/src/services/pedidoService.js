@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO pedidos (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO Pedido (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     db.query(query, [idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal], (err, result) => {
       if (err) {
@@ -15,7 +15,7 @@ const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idP
 
 const listarPedidos = () => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM pedidos', (err, results) => {
+    db.query('SELECT * FROM Pedido', (err, results) => {
       if (err) {
         reject('Erro ao buscar pedidos: ' + err);
       }
@@ -26,7 +26,7 @@ const listarPedidos = () => {
 
 const listarPedidoPorId = (id) => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM pedidos WHERE id = ?', [id], (err, results) => {
+    db.query('SELECT * FROM Pedido WHERE id = ?', [id], (err, results) => {
       if (err) {
         reject('Erro ao buscar pedido: ' + err);
       }
@@ -48,7 +48,7 @@ const atualizarPedido = (id, camposParaAtualizar) => {
 
     const setClause = campos.map((campo) => `${campo} = ?`).join(', ');
 
-    const query = `UPDATE pedidos SET ${setClause} WHERE id = ?`;
+    const query = `UPDATE Pedido SET ${setClause} WHERE id = ?`;
 
     valores.push(id);
 
@@ -63,7 +63,7 @@ const atualizarPedido = (id, camposParaAtualizar) => {
 
 const deletarPedido = (id) => {
   return new Promise((resolve, reject) => {
-    db.query('DELETE FROM pedidos WHERE id = ?', [id], (err, result) => {
+    db.query('DELETE FROM Pedido WHERE id = ?', [id], (err, result) => {
       if (err) {
         reject('Erro ao deletar pedido: ' + err);
       }
