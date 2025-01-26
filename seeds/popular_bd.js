@@ -26,8 +26,8 @@ exports.seed = async function(knex) {
   ]);
 
   await knex('Funcionario').insert([
-    { Pnome: 'Hudson', ID_Usuario: 2, Unome: 'Henrique', Sexo: 'M', Endereco: 'Rua Sarandi', CPF: '10245932148', Salario: 2000, Data_Inicio: '2025-01-01', Data_Fim: null, Data_Inicio_Gerencia: null },
-    { Pnome: 'Nicolas', ID_Usuario: 1, Unome: 'Carvalho', Sexo: 'M', Endereco: 'Rua Avenícolas', CPF: '19232118230', Salario: 9000, Data_Inicio: '2024-04-30', Data_Fim: null, Data_Inicio_Gerencia: '2024-10-30' }
+    { Login: 'Pesudsson', Senha: 123, Pnome: 'Hudson', Unome: 'Henrique', Sexo: 'M', Endereco: 'Rua Sarandi', CPF: '10245932148', Salario: 2000, Data_Inicio: '2025-01-01', Data_Fim: null, Data_Inicio_Gerencia: null, Tipo: 'ATENDENTE', ID_Usuario: 2 },
+    { Login: 'Repicolas', Senha: 100, Pnome: 'Nicolas', Unome: 'Carvalho', Sexo: 'M', Endereco: 'Rua Avenícolas', CPF: '19232118230', Salario: 9000, Data_Inicio: '2024-04-30', Data_Fim: null, Data_Inicio_Gerencia: '2024-10-30', Tipo: 'GERENTE', ID_Usuario: 1 }
   ]);
 
   await knex('Categoria').insert([

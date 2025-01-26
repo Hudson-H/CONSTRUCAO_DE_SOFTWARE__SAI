@@ -76,22 +76,25 @@ exports.up = function(knex) {
         .then(() => {
             return knex.schema.createTable('Usuario', (table) => {
                 table.increments('ID').primary();
-                table.string('Login', 30);
-                table.integer('Senha');
+                table.string('Login', 30).notNullable();
+                table.integer('Senha').notNullable();
             });
         })
         .then(() => {
             return knex.schema.createTable('Funcionario', (table) => {
-                table.string('Pnome', 30);
-                table.increments('ID_Usuario').primary();
-                table.string('Unome', 30);
-                table.string('Sexo', 10);
-                table.string('Endereco', 100);
-                table.string('CPF', 11);
-                table.float('Salario');
-                table.date('Data_Inicio');
+                table.string('Login', 30).notNullable();
+                table.integer('Senha').notNullable();
+                table.string('Pnome', 30).notNullable();
+                table.string('Unome', 30).notNullable();
+                table.string('Sexo', 10).notNullable();
+                table.string('Endereco', 100).notNullable();
+                table.string('CPF', 11).notNullable();
+                table.float('Salario').notNullable();
+                table.date('Data_Inicio').notNullable();
                 table.date('Data_Fim');
                 table.date('Data_Inicio_Gerencia');
+                table.enum('Tipo', ['GERENTE', 'ATENDENTE']).notNullable();
+                table.increments('ID_Usuario').primary();
             });
         })
         .then(() => {
