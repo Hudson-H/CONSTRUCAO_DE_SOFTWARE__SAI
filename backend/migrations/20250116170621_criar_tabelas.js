@@ -33,6 +33,13 @@ exports.up = function(knex) {
                 table.increments('ID').primary();
                 table.float('Valor');
                 table.string('Descricao', 100);
+                table.integer('ID_SecaoCardapio').unsigned();
+            });
+        })
+        .then(() => {
+            return knex.schema.createTable('SecaoCardapio', (table) => {
+                table.increments('ID').primary();
+                table.string('Nome', 30);
             });
         })
         .then(() => {
@@ -125,6 +132,9 @@ exports.up = function(knex) {
                 .table('ItemPedido', (table) => {
                     table.foreign('ID_Pedido').references('Pedido.ID');
                 })
+                .table('ItemCardapio', (table) => {
+                    table.foreign('ID_SecaoCardapio').references('SecaoCardapio.ID');
+                })
                 .table('Item', (table) => {
                     table.foreign('ID_Categoria').references('Categoria.ID');
                 })
@@ -164,6 +174,7 @@ exports.up = function(knex) {
         .dropTableIfExists('Permissao')
         .dropTableIfExists('ItemPedido')
         .dropTableIfExists('ItemCardapio')
+        .dropTableIfExists('SecaoCardapio')
         .dropTableIfExists('Pedido')
         .dropTableIfExists('Funcionario')
         .dropTableIfExists('Usuario')

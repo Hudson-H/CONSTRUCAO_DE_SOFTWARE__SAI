@@ -1,6 +1,7 @@
 const db = require('../config/db');  // Conexão com o banco de dados
 
 const listarEstoque = ({ idItem } = {}) => {
+  console.log("idItem recebido:", idItem);
   return new Promise((resolve, reject) => {
     // Define a query com ou sem filtro
     const query = idItem
@@ -24,6 +25,7 @@ const listarEstoque = ({ idItem } = {}) => {
 const buscarEstoquePorID = (ID) => {
   return new Promise((resolve, reject) => {
     const query = `SELECT * FROM estoque WHERE ID = ?`;
+    console.log("Buscar estoque, id = " + ID);
     db.query(query, [ID], (err, results) => {
       if (err) {
         return reject('Erro ao buscar estoque: ' + err);
@@ -166,13 +168,15 @@ const adicionarItemEstoque = (dados) => {
     });
 };
 
+
 const deletarItemEstoque = (id) => {
   return new Promise((resolve, reject) => {
     const query = 'DELETE FROM Item WHERE ID = ?';
     db.query(query, [id], (err, results) => {
       if (err) {
-        return reject('Erro ao deletar item: ' + err);
+        reject('Erro ao deletar item no service: ' + err);
       }
+
       resolve(results);
     });
   });

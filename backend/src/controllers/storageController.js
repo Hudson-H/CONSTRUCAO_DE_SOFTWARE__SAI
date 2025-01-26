@@ -1,5 +1,7 @@
 const storageService = require('../services/storageService');
 
+const orderMenuService = require('../services/orderMenuService'); 
+
 const listarEstoque = async (req, res) => {
   const { id_item } = req.query;
   console.log("Listando estoque, filtros recebidos:", req.query);
@@ -46,10 +48,11 @@ const atualizarEstoque = async (req, res) => {
     if (!ID || isNaN(ID)) {
       return res.status(400).json({ error: 'ID inválido fornecido.' });
     }
-    //const estoque = await storageService.listarEstoquePorId(ID);
-    // if (!categoria) {
-    //   return res.status(404).json({ error: 'Categoria não encontrada.' });
-    // }
+    const estoque = await storageService.buscarEstoquePorID(ID);
+    if (!estoque) {
+      return res.status(404).json({ error: 'Estoque não encontrado.' });
+    }
+
     const result = await storageService.atualizarEstoque(ID, dados);
     res.status(201).json({ message: 'Estoque atualizado com sucesso.'});
   } 
@@ -181,8 +184,30 @@ const deletarItemEstoque = async (req, res) => {
 
     const item = await storageService.buscarItemEstoquePorID(itemId);
 
+    // const itemIdInt = parseInt(req.params.id, 10); 
+
     if (!item) {
       return res.status(404).json({ error: 'Item não encontrado.' });
+    }
+
+    console.log("Verificando lotes associados ao item:", itemId);
+
+    const lotes = await storageService.listarEstoque({ idItem: itemId });
+
+    console.log("Lotes retornados:", lotes); 
+    //tem que ver se nao tem também no CompostoPor
+    if (lotes.length > 0) {
+      return res.status(400).json({
+        error: 'Não é possível deletar o item, pois há lotes do estoque associados a ele.',
+      });
+    }
+
+    const composicao = await orderMenuService.listarComposicao({idItem: itemId})
+
+    if (composicao.length > 0) {
+      return res.status(400).json({
+        error: 'Não é possível deletar o item, pois há Itens do Cardapio compostos por ele.',
+      });
     }
 
     await storageService.deletarItemEstoque(itemId);
