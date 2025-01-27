@@ -5,6 +5,7 @@ import { Root } from './components/organisms/Root/Root';
 import { AuthRoot } from './components/organisms/AuthRoot/AuthRoot';
 import { Login } from './views/login/Login';
 import { Cardapio } from './views/cardapio/Cardapio';
+import { Pedido } from './views/pedido/Pedido';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -14,6 +15,7 @@ const router = createBrowserRouter(
     <Route element={<Root />}>
       <Route path="/dashboard" element={<Dashboard/>}></Route>
       <Route path="/cardapio" element={<Cardapio/>}></Route>
+      <Route path="/pedido" element={<Pedido/>}></Route>
     </Route>
   </>)
 );

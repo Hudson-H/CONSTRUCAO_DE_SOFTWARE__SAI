@@ -10,7 +10,7 @@ export function Header() {
     <div className="justify-start items-center gap-4 flex">
       <TrackingButtton
         counter={0}
-        linkTo=""
+        linkTo="/pedido?category=preparando"
         color="yellow"
         icon={<ClockClockwise size={32} />}
       >
@@ -19,7 +19,7 @@ export function Header() {
 
       <TrackingButtton
         counter={0}
-        linkTo=""
+        linkTo="/pedido?category=pronto"
         color="blue"
         icon={<CheckCircle size={32} />}
       >

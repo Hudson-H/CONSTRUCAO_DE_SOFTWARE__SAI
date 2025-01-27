@@ -8,11 +8,11 @@ import Button from "../../atoms/Button/Button";
 import { SAILogo } from "../../molecules/SAILogo/SAILogo";
 
 const sidebarButtons = [
-  { label: "Novo Pedido"  , icon: <PlusCircle size={24} />          , linkTo: "/pedidos/novo"},
-  { label: "Ver Pedidos"  , icon: <ListMagnifyingGlass size={24} /> , linkTo: "/pedidos"},
+  { label: "Novo Pedido"  , icon: <PlusCircle size={24} />          , linkTo: "/pedido/novo"},
+  { label: "Ver Pedidos"  , icon: <ListMagnifyingGlass size={24} /> , linkTo: "/pedido"},
   { label: "Cardápio"     , icon: <BookOpen size={24} />            , linkTo: "/cardapio"},
   { label: "Estoque"      , icon: <Package size={24} />             , linkTo: "/estoque"},
-  { label: "Funcionários" , icon: <UsersThree size={24} />          , linkTo: "/funcionarios"},
+  { label: "Funcionários" , icon: <UsersThree size={24} />          , linkTo: "/funcionario"},
 ]
 
 type SidebarButtonProps = {

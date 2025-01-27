@@ -64,7 +64,7 @@ const sectionDescriptor: DataTableDescriptor[] = [
     type: "action",
     size: 1,
     icon: <Trash size={24} />,
-    action: () => { console.log("Edit") }
+    action: () => { console.log("Remove") }
   }
 ];
 const sectionData = [
