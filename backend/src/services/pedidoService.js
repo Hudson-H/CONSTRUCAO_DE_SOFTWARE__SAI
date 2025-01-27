@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO Pedido (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO Pedido (idAtendente, senha, valor, data_Pedido, informacoes, id_Pagamento, data_Emissao_Pagamento, valor_Total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     db.query(query, [idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal], (err, result) => {
       if (err) {
