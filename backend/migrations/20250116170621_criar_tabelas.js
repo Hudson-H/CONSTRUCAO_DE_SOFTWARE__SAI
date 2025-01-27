@@ -33,6 +33,13 @@ exports.up = function(knex) {
                 table.increments('ID').primary();
                 table.float('Valor');
                 table.string('Descricao', 100);
+                table.integer('ID_SecaoCardapio').unsigned();
+            });
+        })
+        .then(() => {
+            return knex.schema.createTable('SecaoCardapio', (table) => {
+                table.increments('ID').primary();
+                table.string('Nome', 30);
             });
         })
         .then(() => {
@@ -105,8 +112,8 @@ exports.up = function(knex) {
             return knex.schema.createTable('Adicionar', (table) => {
                 table.integer('ID_Item_Pedido').unsigned().notNullable();
                 table.integer('ID_Item_Cardapio').unsigned().notNullable();
-                table.integer('ID_Adicional').unsigned().notNullable();
-                table.integer('Quantidade_Adicional').notNullable();
+                table.integer('ID_Adicional').unsigned();
+                table.integer('Quantidade_Adicional');
                 table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio', 'ID_Adicional']);
             });
         })
@@ -114,6 +121,7 @@ exports.up = function(knex) {
             return knex.schema.createTable('CompostoPor', (table) => {
                 table.integer('ID_Item_Cardapio').unsigned().notNullable();
                 table.integer('ID_Item').unsigned().notNullable();
+                table.integer('Quantidade_Composicao').notNullable();
                 table.primary(['ID_Item_Cardapio', 'ID_Item']);
             });
         })
@@ -124,6 +132,9 @@ exports.up = function(knex) {
                 })
                 .table('ItemPedido', (table) => {
                     table.foreign('ID_Pedido').references('Pedido.ID');
+                })
+                .table('ItemCardapio', (table) => {
+                    table.foreign('ID_SecaoCardapio').references('SecaoCardapio.ID');
                 })
                 .table('Item', (table) => {
                     table.foreign('ID_Categoria').references('Categoria.ID');
@@ -164,6 +175,7 @@ exports.up = function(knex) {
         .dropTableIfExists('Permissao')
         .dropTableIfExists('ItemPedido')
         .dropTableIfExists('ItemCardapio')
+        .dropTableIfExists('SecaoCardapio')
         .dropTableIfExists('Pedido')
         .dropTableIfExists('Funcionario')
         .dropTableIfExists('Usuario')

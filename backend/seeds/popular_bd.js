@@ -12,6 +12,7 @@ exports.seed = async function(knex) {
   await knex('Permissao').del();
   await knex('ItemPedido').del();
   await knex('ItemCardapio').del();
+  await knex('SecaoCardapio').del()
   await knex('Pedido').del();
   await knex('Funcionario').del();
   await knex('Usuario').del();
@@ -52,19 +53,23 @@ exports.seed = async function(knex) {
     { Nome: 'Sprite', Descricao: 'Latinha de Sprite', Estrategia_Controle: null, ID_Categoria: 2}
   ]);
 
+  await knex('SecaoCardapio').insert([
+    { Nome: 'Saudaveis'}
+  ]);
+
   await knex('ItemCardapio').insert([
-    { Nome: 'Hamburgao', Valor: 21.50, Descricao: 'Gostoso, carne, alface, tomate, queijo' },
-    { Nome: 'Água', Valor: 4, Descricao: 'Agua Geladinha' }
+    { Nome: 'Hamburgao', Valor: 21.50, Descricao: 'Gostoso, carne, alface, tomate, queijo', ID_SecaoCardapio: 1 },
+    { Nome: 'Água', Valor: 4, Descricao: 'Agua Geladinha', ID_SecaoCardapio: 1 }
   ]);
 
   await knex('CompostoPor').insert([
-    { ID_Item_Cardapio: 1, ID_Item: 1 },
-    { ID_Item_Cardapio: 1, ID_Item: 2 },
-    { ID_Item_Cardapio: 1, ID_Item: 3 },
-    { ID_Item_Cardapio: 1, ID_Item: 4 },
-    { ID_Item_Cardapio: 1, ID_Item: 6 },
-    { ID_Item_Cardapio: 1, ID_Item: 8 },
-    { ID_Item_Cardapio: 2, ID_Item: 12 }
+    { ID_Item_Cardapio: 1, ID_Item: 1, Quantidade_Composicao: 1},
+    { ID_Item_Cardapio: 1, ID_Item: 2, Quantidade_Composicao: 1 },
+    { ID_Item_Cardapio: 1, ID_Item: 3, Quantidade_Composicao: 2 },
+    { ID_Item_Cardapio: 1, ID_Item: 4, Quantidade_Composicao: 1 },
+    { ID_Item_Cardapio: 1, ID_Item: 6, Quantidade_Composicao: 1 },
+    { ID_Item_Cardapio: 1, ID_Item: 8, Quantidade_Composicao: 1 },
+    { ID_Item_Cardapio: 2, ID_Item: 12, Quantidade_Composicao: 1 }
   ]);
 
   await knex('Adicional').insert([

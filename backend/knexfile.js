@@ -10,7 +10,7 @@ module.exports = {
     connection: {
       host: 'localhost', // Host do seu servidor MySQL
       user: 'root', // Usuário do banco
-      password: 'rootroot', // Senha do banco
+      password: 'password', // Senha do banco
       database: 'sai', // Nome do banco de dados
     },
     migrations: {
