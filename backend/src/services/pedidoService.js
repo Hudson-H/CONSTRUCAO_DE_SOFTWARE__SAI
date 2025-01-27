@@ -1,17 +1,26 @@
 const db = require('../config/db');
 
-const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) => {
+const adicionarPedido = (idAtendente, senha, valor, dataPedido, estado, informacoes, idPagamento, dataEmissaoPagamento, dataPagamento, formaPagamento, valorTotal, valorPago, troco) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO Pedido (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = `
+      INSERT INTO Pedido
+      (idAtendente, Senha, Valor, Data_Pedido, Estado, Informacoes, ID_Pagamento, Data_Emissao_Pagamento, Data_Pagamento, Forma_Pagamento, Valor_Total, Valor_Pago, Troco)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
-    db.query(query, [idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal], (err, result) => {
-      if (err) {
-        reject('Erro ao adicionar pedido: ' + err);
+    db.query(
+      query,
+      [idAtendente, senha, valor, dataPedido, estado, informacoes, idPagamento, dataEmissaoPagamento, dataPagamento, formaPagamento, valorTotal, valorPago, troco],
+      (err, result) => {
+        if (err) {
+          return reject('Erro ao adicionar pedido: ' + err);
+        }
+        resolve(result);
       }
-      resolve(result);
-    });
+    );
   });
-}
+};
+
 
 const listarPedidos = () => {
   return new Promise((resolve, reject) => {
@@ -63,13 +72,38 @@ const atualizarPedido = (id, camposParaAtualizar) => {
 
 const deletarPedido = (id) => {
   return new Promise((resolve, reject) => {
-    db.query('DELETE FROM Pedido WHERE id = ?', [id], (err, result) => {
+    db.beginTransaction((err) => {
       if (err) {
-        reject('Erro ao deletar pedido: ' + err);
+        return reject('Erro ao iniciar transação: ' + err);
       }
-      resolve(result);
+
+      db.query('DELETE FROM ItemPedido WHERE idPedido = ?', [id], (err, result) => {
+        if (err) {
+          return db.rollback(() => {
+            reject('Erro ao deletar itens do pedido: ' + err);
+          });
+        }
+
+        db.query('DELETE FROM Pedido WHERE id = ?', [id], (err, result) => {
+          if (err) {
+            return db.rollback(() => {
+              reject('Erro ao deletar pedido: ' + err);
+            });
+          }
+
+          db.commit((err) => {
+            if (err) {
+              return db.rollback(() => {
+                reject('Erro ao confirmar transação: ' + err);
+              });
+            }
+
+            resolve('Pedido e itens deletados com sucesso!');
+          });
+        });
+      });
     });
   });
-}
+};
 
 module.exports = { listarPedidos, listarPedidoPorId, adicionarPedido, atualizarPedido, deletarPedido };
