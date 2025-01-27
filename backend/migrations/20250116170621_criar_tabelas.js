@@ -112,8 +112,8 @@ exports.up = function(knex) {
             return knex.schema.createTable('Adicionar', (table) => {
                 table.integer('ID_Item_Pedido').unsigned().notNullable();
                 table.integer('ID_Item_Cardapio').unsigned().notNullable();
-                table.integer('ID_Adicional').unsigned().notNullable();
-                table.integer('Quantidade_Adicional').notNullable();
+                table.integer('ID_Adicional').unsigned();
+                table.integer('Quantidade_Adicional');
                 table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio', 'ID_Adicional']);
             });
         })
@@ -121,6 +121,7 @@ exports.up = function(knex) {
             return knex.schema.createTable('CompostoPor', (table) => {
                 table.integer('ID_Item_Cardapio').unsigned().notNullable();
                 table.integer('ID_Item').unsigned().notNullable();
+                table.integer('Quantidade_Composicao').notNullable();
                 table.primary(['ID_Item_Cardapio', 'ID_Item']);
             });
         })
