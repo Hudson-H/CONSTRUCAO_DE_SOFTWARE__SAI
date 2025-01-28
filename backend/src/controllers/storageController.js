@@ -197,9 +197,10 @@ const deletarItemEstoque = async (req, res) => {
     console.log("Lotes retornados:", lotes); 
     //tem que ver se nao tem também no CompostoPor
     if (lotes.length > 0) {
-      return res.status(400).json({
-        error: 'Não é possível deletar o item, pois há lotes do estoque associados a ele.',
-      });
+      await storageService.removerEstoquePorItem(itemId);
+      // return res.status(400).json({
+      //   error: 'Não é possível deletar o item, pois há lotes do estoque associados a ele.',
+      // });
     }
 
     const composicao = await orderMenuService.listarComposicao({idItem: itemId})

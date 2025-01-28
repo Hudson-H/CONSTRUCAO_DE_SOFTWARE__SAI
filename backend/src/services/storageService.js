@@ -189,6 +189,21 @@ const deletarItemEstoque = (id) => {
   });
 }
 
+const removerEstoquePorItem = (idItem) => {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM Estoque WHERE ID_Item = ?';
+    const params = [idItem];
+
+    db.query(query, params, (err, results) => {
+      if (err) {
+        return reject('Erro ao remover composição: ' + err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+
 const adicionarCategoriaEstoque = (dados) => {
     return new Promise((resolve, reject) => {
       const campos = [];
@@ -301,4 +316,4 @@ const deletarCategoriaEstoque = (id) => {
 }
 
 
-module.exports = {listarEstoque, buscarEstoquePorID, listarItensEstoque, listarCategoriasEstoque, buscarItemEstoquePorID, buscarCategoriaEstoquePorID, adicionarEstoque, adicionarItemEstoque, adicionarCategoriaEstoque, atualizarEstoque, atualizarItemEstoque, atualizarCategoriaEstoque, deletarEstoque, deletarItemEstoque, deletarCategoriaEstoque};
+module.exports = {listarEstoque, removerEstoquePorItem, buscarEstoquePorID, listarItensEstoque, listarCategoriasEstoque, buscarItemEstoquePorID, buscarCategoriaEstoquePorID, adicionarEstoque, adicionarItemEstoque, adicionarCategoriaEstoque, atualizarEstoque, atualizarItemEstoque, atualizarCategoriaEstoque, deletarEstoque, deletarItemEstoque, deletarCategoriaEstoque};
