@@ -7,6 +7,8 @@ import Input from "../../../../components/atoms/Input/Input";
 import { Label } from "../../../../components/atoms/Label/Label";
 import { FormField } from "../../../../components/molecules/FormField/FormField";
 import ItemCardapioService from "../../../../services/ItemCardapioService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 type NovoItemCardapioProps = {};
 
@@ -19,6 +21,8 @@ const categoryFormSchema = z.object({
 export type categoryFormData = z.infer<typeof categoryFormSchema>;
 
 export function NovoItemCardapio() {
+  const navigate = useNavigate();
+
   const {
     handleSubmit,
     setValue,
@@ -45,9 +49,11 @@ export function NovoItemCardapio() {
         compostoPor: [],
       });
 
-      console.log(response);
+      toast.info("Item adicionado com sucesso!");
+      navigate(`/cardapio?category=item`);
     } catch (err) {
-      console.error(err);
+      if (err instanceof Error)
+        toast.error(err.message);
     }
   }
 

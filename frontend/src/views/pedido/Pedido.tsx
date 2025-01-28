@@ -74,7 +74,7 @@ export function Pedido() {
         )}
       </div>
 
-      <DataTableBar title={categories[category]}></DataTableBar>
+      <DataTableBar title={categories[category]} newButtonLink="/pedido/novo"></DataTableBar>
       <DataTable
         descriptor={orderDescriptor}
         data={orderData}

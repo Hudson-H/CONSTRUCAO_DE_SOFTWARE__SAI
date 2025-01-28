@@ -170,7 +170,11 @@ export function Estoque() {
         )}
       </div>
 
-      <DataTableBar title={categories[category]}></DataTableBar>
+      <DataTableBar title={categories[category]} newButtonLink={
+        category === "item" ? "/estoque/item/novo" :
+        category === "categoria" ? "/estoque/categoria/novo" :
+        "/estoque/lancamento/novo"
+      }></DataTableBar>
       <DataTable
         descriptor={
           category === "item" ? itemDescriptor :

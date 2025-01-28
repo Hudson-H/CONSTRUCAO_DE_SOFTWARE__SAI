@@ -3,13 +3,15 @@ import Button from "../../atoms/Button/Button";
 import { Title } from "../../atoms/Title/Title";
 import Input from "../../atoms/Input/Input";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
 
 type DataTableBarProps = {
   title: string;
+  newButtonLink: string;
   className?: string;
 };
 
-export function DataTableBar({ title, className }: DataTableBarProps) {
+export function DataTableBar({ title, newButtonLink, className }: DataTableBarProps) {
   const [searchValue, setSearch] = useState("");
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +35,11 @@ export function DataTableBar({ title, className }: DataTableBarProps) {
         icon={<MagnifyingGlass className="opacity-25" weight="bold" size={16}/>}
         className="text-sm h-full"
       ></Input>
-      <Button className="h-full" color="blue">
-        Novo
-      </Button>
+      <Link to={newButtonLink}>
+        <Button className="h-full" color="blue">
+          Novo
+        </Button>
+      </Link>
     </div>
   </div>;
 }

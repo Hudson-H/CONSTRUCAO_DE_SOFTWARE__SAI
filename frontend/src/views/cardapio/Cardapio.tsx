@@ -164,7 +164,11 @@ export function Cardapio() {
         )}
       </div>
 
-      <DataTableBar title={categories[category]}></DataTableBar>
+      <DataTableBar title={categories[category]} newButtonLink={
+        category === "item" ? "/cardapio/item/novo" :
+        category === "secao" ? "/cardapio/secao/novo" :
+        "/cardapio/adicional/novo"
+      }></DataTableBar>
       <DataTable
         descriptor={
           category === "item" ? itemDescriptor :
