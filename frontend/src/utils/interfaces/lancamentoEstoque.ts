@@ -1,7 +1,7 @@
-export default interface LancamentoEstoqueService {
+export default interface ILancamentoEstoque {
   id: string;
   quantidade: number;
-  dataCompra: string;
-  dataValidade?: string;
+  dataCompra: Date;
+  dataValidade?: Date;
   item: string;
 }
