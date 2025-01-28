@@ -1,5 +1,6 @@
 const employeeService = require('../services/employeeService');
 const userService = require('../services/userService');
+const pedidoService = require('../services/pedidoService')
 const db = require('../config/db');
 const yup = require('yup');
 
@@ -144,9 +145,13 @@ const deletarFuncionario = async (req, res) => {
   db.beginTransaction();
 
   try {
-    const result = await employeeService.deletarFuncionario(ID);
-    res.status(201).json({ message: 'Funcionário deletado com sucesso.'});
+    const funcionario = await employeeService.deletarFuncionario(ID);
+    const usuario = await userService.deletarUsuario(ID);
+
+    db.commit();
+    res.status(201).json({ message: 'Funcionário deletado com sucesso.' });
   } catch (err) {
+    db.rollback();
     console.error(err);
     res.status(500).json({ error: 'Erro ao deletar funcionário.' });
   }

@@ -38,12 +38,22 @@ const atualizarPedido = async (req, res) => {
   const { id } = req.params;
   const camposParaAtualizar = req.body;
 
-  try {
-    await pedidoService.atualizarPedido(id, camposParaAtualizar);
-    res.json({ message: 'Pedido atualizado com sucesso.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao atualizar pedido.' });
+  if(Object.keys(camposParaAtualizar).length == 1 && Object.keys(camposParaAtualizar)[0] == "Estado") {
+    try {
+      await pedidoService.atualizarPedido(id, camposParaAtualizar);
+      res.json({ message: 'Estado do pedido atualizado com sucesso.' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao atualizar o estado pedido.' });
+    }
+  } else {
+    try {
+      await pedidoService.atualizarPedido(id, camposParaAtualizar);
+      res.json({ message: 'Pedido atualizado com sucesso.' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao atualizar pedido.' });
+    }
   }
 }
 

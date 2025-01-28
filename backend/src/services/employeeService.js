@@ -97,8 +97,17 @@ const atualizarFuncionario = (ID, dados) => {
 
 const deletarFuncionario = (ID) => {
   return new Promise((resolve, reject) => {
-    const query = `DELETE FROM Funcionario WHERE ID_Usuario = ?`;
-    db.query(query, [ID], (err, results) => {
+    const query1 = 'UPDATE pedido SET idAtendente = NULL WHERE idAtendente = ?';
+
+    db.query(query1, [ID], (err, results) => {
+      if (err) {
+        reject('Erro ao desvincular funcionário do pedido: ' + err);
+      }
+      resolve(results);
+    });
+
+    const query2 = `DELETE FROM Funcionario WHERE ID_Usuario = ?`;
+    db.query(query2, [ID], (err, results) => {
       if (err) {
         reject('Erro ao deletar usuário: ' + err);
       }

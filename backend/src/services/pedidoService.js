@@ -2,6 +2,7 @@ const db = require('../config/db');
 
 const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) => {
   return new Promise((resolve, reject) => {
+
     const query = 'INSERT INTO Pedido (idAtendente, senha, valor, data_Pedido, informacoes, id_Pagamento, data_Emissao_Pagamento, valor_Total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     db.query(query, [idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal], (err, result) => {
@@ -28,13 +29,17 @@ const listarPedidoPorId = (id) => {
   return new Promise((resolve, reject) => {
     db.query('SELECT * FROM Pedido WHERE id = ?', [id], (err, results) => {
       if (err) {
-        reject('Erro ao buscar pedido: ' + err);
+        return reject('Erro ao buscar pedido: ' + err);
       }
-      resolve(results);
+
+      if (results.length === 0) {
+        return reject(`Pedido com ID ${id} não encontrado.`);
+      }
+
+      resolve(results[0]); // Retorna o primeiro item (assumindo que IDs são únicos)
     });
   });
-}
-
+};
 
 const atualizarPedido = (id, camposParaAtualizar) => {
   return new Promise((resolve, reject) => {
