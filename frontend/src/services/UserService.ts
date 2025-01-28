@@ -1,6 +1,6 @@
 import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
-import IUser from "../utils/interaces/user";
+import IUser from "../utils/interfaces/user";
 import { Permission } from "../utils/types/permission";
 
 type CurrentUserResponse = IUser & {

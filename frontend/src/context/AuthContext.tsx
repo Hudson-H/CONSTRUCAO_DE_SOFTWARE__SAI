@@ -4,8 +4,8 @@ import AuthService from "../services/AuthService";
 import { toast } from "react-toastify";
 import { api } from "../lib/axios";
 import { Permission } from "../utils/types/permission";
-import IUser from "../utils/interaces/user";
-import UserService from "./UserService";
+import IUser from "../utils/interfaces/user";
+import UserService from "../services/UserService";
 
 export interface IAuthContext {
   user?: IUser;

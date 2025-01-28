@@ -1,6 +1,6 @@
 import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
-import IToken from "../utils/interaces/token";
+import IToken from "../utils/interfaces/token";
 
 const AuthService = {
   login: async (login: string, password: string): Promise<IToken> => {

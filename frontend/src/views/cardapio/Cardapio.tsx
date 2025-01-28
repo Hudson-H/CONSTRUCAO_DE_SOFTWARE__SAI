@@ -65,7 +65,7 @@ const sectionDescriptor: DataTableDescriptor[] = [
     action: () => { console.log("Edit") }
   },
   {
-        key: "delete",
+    key: "delete",
     type: "action",
     icon: <Trash className={textColors["red"]} size={24} />,
     action: () => { console.log("Remove") }
