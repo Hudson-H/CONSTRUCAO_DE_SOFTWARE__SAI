@@ -64,4 +64,16 @@ const atualizarUsuario = async (req, res) => {
   }
 }
 
-module.exports = { adicionarUsuario, listarUsuarios, loginUsuario, listarUsuarioPorId, atualizarUsuario };
+const deletarUsuario = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await userService.deletarUsuario(id);
+    res.json({ message: 'Usuário removido com sucesso.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao remover usuário.' });
+  }
+}
+
+module.exports = { adicionarUsuario, listarUsuarios, loginUsuario, listarUsuarioPorId, deletarUsuario, atualizarUsuario };
