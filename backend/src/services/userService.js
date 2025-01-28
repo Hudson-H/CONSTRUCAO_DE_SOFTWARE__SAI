@@ -57,7 +57,6 @@ const loginUsuario = (req, login, senha) => {
           return;
         }
         const user = results[0];
-        console.log(user)
         bcrypt.compare(senha, user.Senha, (err, result) => {
           if (err) {
             connection.rollback(() => reject('Erro ao validar senha: ' + err));
@@ -73,11 +72,10 @@ const loginUsuario = (req, login, senha) => {
             .then(() => {
               if (req.session) {
                 req.session.user = {
-                  id: user.id,
+                  id: user.ID,
                   token: token,
                   expirationTime: formattedExpirationTime,
                 };
-                console.log('Usuário logado com sucesso:', req.session.user);
               } else {
                 connection.rollback(() => reject('Erro interno: sessão não inicializada.'));
                 return;
