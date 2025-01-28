@@ -37,7 +37,9 @@ function SidebarButton({ label, icon, linkTo }: SidebarButtonProps) {
 export function Root() {
   return <div className="grid grid-cols-12 grid-rows-12 gap-0 h-screen font-display text-base">
     <Sidebar>
-      <SAILogo />
+      <Link to="/dashboard">
+        <SAILogo />
+      </Link>
 
       <div className="gap-3 flex flex-col">
         <Label>Ações</Label>

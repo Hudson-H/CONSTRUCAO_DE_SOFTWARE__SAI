@@ -4,6 +4,8 @@ import { Title } from "../../components/atoms/Title/Title";
 import { useState } from "react";
 import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
 import { useSearchParams } from "react-router-dom";
+import { DataTableBar } from "../../components/molecules/DataTableBar/DataTableBar";
+import { textColors } from "../../utils/style/TextColor";
 
 const categories = Object.freeze({
   todos: "Todos",
@@ -20,21 +22,19 @@ const orderDescriptor: DataTableDescriptor[] = [
   { title: "ID"          , type: "text"   , size: 1 , key: "id" },
   { title: "Status"      , type: "text"   , size: 3 , key: "status" },
   { title: "Método Pgto.", type: "text"   , size: 4 , key: "metodo_pgto" },
-  { title: "Valor"       , type: "text" , size: 2 , key: "valor" },
+  { title: "Valor"       , type: "text" , size: 3 , key: "valor" },
   {
-    title: "",
     type: "action",
     key: "edit",
     size: 1,
-    icon: <Pencil size={24} />,
+    icon: <Pencil className={textColors["blue"]} size={24} />,
     action: () => { console.log("Edit") }
   },
   {
-    title: "",
     key: "delete",
     type: "action",
     size: 1,
-    icon: <Trash size={24} />,
+    icon: <Trash className={textColors["red"]} size={24} />,
     action: () => { console.log("Edit") }
   }
 ];
@@ -74,7 +74,7 @@ export function Pedido() {
 
   return (
     <div className="w-full h-full flex flex-col gap-4">
-      <Title>Cardápio</Title>
+      <Title>Pedido</Title>
 
       <div className="flex flex-row gap-4">
         {Object.entries(categories).map(([key, value]) =>
@@ -92,13 +92,8 @@ export function Pedido() {
         )}
       </div>
 
-      <div className="flex flex-row items-center justify-between">
-        <Title>{categories[category]}</Title>
-        <Button className="h-fit" color="blue">
-          Novo
-        </Button>
-      </div>
 
+      <DataTableBar title={categories[category]}></DataTableBar>
       <DataTable
         descriptor={orderDescriptor}
         data={orderData}

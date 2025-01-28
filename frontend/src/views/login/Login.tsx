@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
 
 const loginFormSchema = z.object({
   login: z.string()
@@ -21,7 +23,7 @@ type loginFormData = z.infer<typeof loginFormSchema>;
 
 export function Login() {
   const navigate = useNavigate();
-  // const { authenticated, login } = useContext(AuthContext);
+  const { authenticated, login } = useContext(AuthContext);
 
   const {
     handleSubmit,
@@ -35,16 +37,16 @@ export function Login() {
   const loginValue = watch("login");
   const passwordValue = watch("password");
 
-  // if (authenticated) navigate("/home");
+  if (authenticated) navigate("/dashboard");
 
   async function handleLogin(data: loginFormData) {
-    // try {
-    //   await login(data.email, data.password);
-    //   toast.info("Login realizado com sucesso!");
-    // } catch (err) {
-    //   if (err instanceof Error)
-    //     toast.error(err.message);
-    // }
+    try {
+      await login(data.login, data.password);
+      toast.info("Login realizado com sucesso!");
+    } catch (err) {
+      if (err instanceof Error)
+        toast.error(err.message);
+    }
   }
 
   return <div className="flex w-full h-full">
@@ -57,7 +59,7 @@ export function Login() {
         <FormField haveError={!!errors.login} errorMessage={errors.login?.message}>
           <Label>Login</Label>
           <Input
-            type="text"
+        type="text"
             // {...register("email")}
             value={loginValue??""}
             onChange={ev => setValue("login", ev.target.value)}
@@ -70,7 +72,7 @@ export function Login() {
         <FormField haveError={!!errors.password} errorMessage={errors.password?.message}>
           <Label>Senha</Label>
           <Input
-            type="password"
+        type="password"
             value={passwordValue??""}
             onChange={ev => setValue("password", ev.target.value)}
             placeholder="Insira sua senha"

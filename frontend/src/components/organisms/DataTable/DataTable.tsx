@@ -19,10 +19,10 @@ type DataTableRowProps = {
 }
 
 export type DataTableDescriptor = {
-  title: string;
+  title?: string;
   type: "text" | "number" | "date" | "action";
   key: string;
-  size: SpanSizeType | 0;
+  size?: SpanSizeType;
 
   action?: (event: MouseEvent) => void;
   icon?: ReactNode;
@@ -36,7 +36,7 @@ function DataTableHeader({
       {descriptor.map((item) => (
         <Label
           key={item.key}
-          className={SpanSize[item.size]}
+          className={SpanSize[item.size??0]}
           bold
         >
           {item.title}
@@ -50,33 +50,33 @@ function DataTableRow({
   descriptor,
   data
 }: DataTableRowProps) {
+  const actions = descriptor.filter(value => value.type === "action");
+
   return (
     <div className="w-full grid grid-cols-12 items-center py-4">
-      {descriptor.map((item) => {
-        if (item.type === "action") {
-          return (
-            <div
-              key={item.key}
-              className={`inline-flex justify-end gap-2 ${item.size}`}
-              >
-              <div className="cursor-pointer" onClick={(ev) => {if (item.action) item.action(ev)}}>
-                {item.icon}
-              </div>
-            </div>
-          )
-        }
-
+      {descriptor.filter((val) => val.type !== "action").map((item) => {
         const value = data[item.key].toString();
 
         return (
           <Label
             key={item.title}
-            className={SpanSize[item.size]} light
+            className={SpanSize[item.size??0]} light
           >
             {value}
           </Label>
         )
       })}
+      <div className="inline-flex justify-end gap-2 col-span-1">
+        {actions.map((item) => {
+          return (
+            <div key={item.key}>
+              <div className="cursor-pointer" onClick={(ev) => {if (item.action) item.action(ev)}}>
+                {item.icon}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

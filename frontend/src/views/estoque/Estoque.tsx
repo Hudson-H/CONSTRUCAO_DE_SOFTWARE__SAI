@@ -1,35 +1,33 @@
 import { Pencil, Trash } from "@phosphor-icons/react";
 import Button from "../../components/atoms/Button/Button";
-import { Label } from "../../components/atoms/Label/Label";
 import { Title } from "../../components/atoms/Title/Title";
 import { useState } from "react";
 import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
 import { useSearchParams } from "react-router-dom";
 import { DataTableBar } from "../../components/molecules/DataTableBar/DataTableBar";
 import { textColors } from "../../utils/style/TextColor";
+import { text } from "stream/consumers";
 
 const categories = Object.freeze({
   item: "Item",
-  secao: "Seção",
-  adicional: "Adicional"
+  categoria: "Categoria",
+  lancamento: "Lançamento",
 } as const);
 
 const itemDescriptor: DataTableDescriptor[] = [
   { title: "ID"         , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"       , type: "text" , size: 3 , key: "nome" },
-  { title: "Descrição"  , type: "text" , size: 4 , key: "descricao" },
-  { title: "Estratégia" , type: "text" , size: 3 , key: "estrategia_controle" },
+  { title: "Categoria"  , type: "text" , size: 3 , key: "categoria" },
+  { title: "Nome"       , type: "text" , size: 4 , key: "nome" },
+  { title: "Un. Medida" , type: "text" , size: 3 , key: "unidade_medida" },
   {
     type: "action",
     key: "edit",
-    size: 1,
     icon: <Pencil className={textColors["blue"]} size={24} />,
     action: () => { console.log("Edit") }
   },
   {
     key: "delete",
     type: "action",
-    size: 1,
     icon: <Trash className={textColors["red"]} size={24} />,
     action: () => { console.log("Edit") }
   }
@@ -37,27 +35,27 @@ const itemDescriptor: DataTableDescriptor[] = [
 const itemData = [
   {
     id: 0,
+    categoria: "Categoria 1",
     nome: "Item 1",
-    descricao: "Descrição do item 1",
-    estrategia_controle: "Controle 1"
+    unidade_medida: "Un"
   },
   {
-    id: 0,
+    id: 1,
+    categoria: "Categoria 2",
     nome: "Item 2",
-    descricao: "Descrição do item 2",
-    estrategia_controle: "Controle 2"
+    unidade_medida: "Un"
   },
   {
-    id: 0,
+    id: 2,
+    categoria: "Categoria 3",
     nome: "Item 3",
-    descricao: "Descrição do item 3",
-    estrategia_controle: "Controle 3"
+    unidade_medida: "Un"
   }
 ];
 
-const sectionDescriptor: DataTableDescriptor[] = [
-  { title: "ID"        , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"      , type: "text" , size: 10 , key: "nome" },
+const categoriaDescriptor: DataTableDescriptor[] = [
+  { title: "ID"         , type: "text" , size: 1 , key: "id" },
+  { title: "Nome"       , type: "text" , size: 10 , key: "nome" },
   {
     type: "action",
     key: "edit",
@@ -68,65 +66,67 @@ const sectionDescriptor: DataTableDescriptor[] = [
         key: "delete",
     type: "action",
     icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Remove") }
+    action: () => { console.log("Edit") }
   }
 ];
-const sectionData = [
+const categoryData = [
   {
     id: 0,
-    nome: "Seção 1",
-    descricao: "Descrição da seção 1"
+    nome: "Categoria 1",
+    descricao: "Descrição da categoria 1"
   },
   {
-    id: 0,
-    nome: "Seção 2",
-    descricao: "Descrição da seção 2"
+    id: 1,
+    nome: "Categoria 2",
+    descricao: "Descrição da categoria 2"
   },
   {
-    id: 0,
-    nome: "Seção 3",
-    descricao: "Descrição da seção 3"
+    id: 2,
+    nome: "Categoria 3",
+    descricao: "Descrição da categoria 3"
   }
 ];
 
-const additionalDescriptor: DataTableDescriptor[] = [
-  { title: "ID"        , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"      , type: "text" , size: 3 , key: "nome" },
-  { title: "Descrição" , type: "text" , size: 7 , key: "descricao" },
+const lancamentoDescriptor: DataTableDescriptor[] = [
+  { title: "ID"            , type: "text" , size: 1 , key: "id" },
+  { title: "Nome"          , type: "text" , size: 3 , key: "nome" },
+  { title: "Data Compra"   , type: "text" , size: 3 , key: "data_compra" },
+  { title: "Data Validade" , type: "text" , size: 4 , key: "data_validade" },
   {
     type: "action",
     key: "edit",
-    size: 1,
     icon: <Pencil className={textColors["blue"]} size={24} />,
     action: () => { console.log("Edit") }
   },
   {
-    key: "delete",
+        key: "delete",
     type: "action",
-    size: 1,
     icon: <Trash className={textColors["red"]} size={24} />,
     action: () => { console.log("Edit") }
   }
 ];
-const additionalData = [
+const lancamentoData = [
   {
     id: 0,
-    nome: "Adicional 1",
-    descricao: "Descrição do adicional 1"
+    nome: "Lançamento 1",
+    data_compra: "01/01/2021",
+    data_validade: "01/01/2022"
   },
   {
-    id: 0,
-    nome: "Adicional 2",
-    descricao: "Descrição do adicional 2"
+    id: 1,
+    nome: "Lançamento 2",
+    data_compra: "01/01/2021",
+    data_validade: "01/01/2022"
   },
   {
-    id: 0,
-    nome: "Adicional 3",
-    descricao: "Descrição do adicional 3"
+    id: 2,
+    nome: "Lançamento 3",
+    data_compra: "01/01/2021",
+    data_validade: "01/01/2022"
   }
 ];
 
-export function Cardapio() {
+export function Estoque() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [category, setCategory] = useState<keyof typeof categories>(
@@ -141,7 +141,7 @@ export function Cardapio() {
 
   return (
     <div className="w-full h-full flex flex-col gap-4">
-      <Title>Cardápio</Title>
+      <Title>Estoque</Title>
 
       <div className="flex flex-row gap-4">
         {Object.entries(categories).map(([key, value]) =>
@@ -163,13 +163,13 @@ export function Cardapio() {
       <DataTable
         descriptor={
           category === "item" ? itemDescriptor :
-          category === "secao" ? sectionDescriptor :
-          additionalDescriptor
+          category === "categoria" ? categoriaDescriptor :
+          lancamentoDescriptor
         }
         data={
           category === "item" ? itemData :
-          category === "secao" ? sectionData :
-          additionalData
+          category === "categoria" ? categoryData :
+          lancamentoData
         }
       ></DataTable>
     </div>

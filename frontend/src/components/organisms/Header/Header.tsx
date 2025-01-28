@@ -1,8 +1,13 @@
-import { ClockClockwise, CheckCircle } from "@phosphor-icons/react";
+import { ClockClockwise, CheckCircle, SignOut } from "@phosphor-icons/react";
 import { Label } from "../../atoms/Label/Label";
 import TrackingButtton from "../../molecules/TrackingButton/TrackingButton";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
+import Button from "../../atoms/Button/Button";
 
 export function Header() {
+  const { user, authenticated } = useContext(AuthContext);
+
   return <div className="
     items-center inline-flex h-16 px-8 py-2 justify-between col-span-10
     sticky top-0
@@ -27,9 +32,19 @@ export function Header() {
       </TrackingButtton>
     </div>
 
-    <div>
-      <Label className="font-extralight">Olá, </Label>
-      Nícolas
+    <div className="flex gap-4">
+      <span>
+        <Label className="font-extralight">Olá, </Label>
+        {user && <Label>{user.name}</Label>}
+      </span>
+      <span data-tooltip-id="tooltip-controller" data-tooltip-content="Logout!">
+        <Button
+          icon={<SignOut size={12} weight="bold"/>}
+          color={"gray"}
+          children={undefined}
+          className=""
+        ></Button>
+      </span>
     </div>
   </div>
 }
