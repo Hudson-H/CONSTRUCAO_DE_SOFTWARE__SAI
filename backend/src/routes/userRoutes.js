@@ -1,13 +1,13 @@
 const express = require('express');
-const usuarioController = require('../controllers/userController');
-
 const router = express.Router();
+const userController = require('../controllers/userController'); // Importe o controlador corretamente
 
-router.post('/usuarios', usuarioController.adicionarUsuario);
-router.get('/usuarios', usuarioController.listarUsuarios);
-router.get('/usuarios/:id', usuarioController.listarUsuarioPorId);
-router.delete('/usuarios/:id', usuarioController.deletarUsuario);
-router.patch('/usuarios/:id', usuarioController.atualizarUsuario);
-
+// Defina as rotas
+router.get('/usuarios', userController.listarUsuarios); // Certifique-se de que listarUsuarios está definido no controlador
+router.get('/usuarios/:id', userController.listarUsuarioPorId);
+router.post('/usuarios', userController.adicionarUsuario);
+router.post('/usuarios/login', userController.loginUsuario);
+router.put('/usuarios/:id', userController.atualizarUsuario);
+router.delete('/usuarios:id', userController.deletarUsuario);
 
 module.exports = router;
