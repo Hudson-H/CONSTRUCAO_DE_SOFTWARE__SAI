@@ -78,6 +78,7 @@ exports.up = function(knex) {
                 table.increments('ID').primary();
                 table.string('Nome', 30);
                 table.float('Valor');
+                table.integer('ID_Item').unsigned();        
             });
         })
         .then(() => {
@@ -114,7 +115,7 @@ exports.up = function(knex) {
                 table.integer('ID_Item_Cardapio').unsigned().notNullable();
                 table.integer('ID_Adicional').unsigned();
                 table.integer('Quantidade_Adicional');
-                table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio', 'ID_Adicional']);
+                table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio']);
             });
         })
         .then(() => {
@@ -140,6 +141,9 @@ exports.up = function(knex) {
                     table.foreign('ID_Categoria').references('Categoria.ID');
                 })
                 .table('Estoque', (table) => {
+                    table.foreign('ID_Item').references('Item.ID');
+                })
+                .table('Adicional', (table) => {
                     table.foreign('ID_Item').references('Item.ID');
                 })
                 .table('Funcionario', (table) => {

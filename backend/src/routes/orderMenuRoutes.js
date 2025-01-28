@@ -3,6 +3,8 @@ const orderMenuController = require('../controllers/orderMenuController');
 
 const router = express.Router();
 
+router.patch('/cardapio/teste/:id', orderMenuController.atualizarEstoqueAposPedido);
+
 router.get('/cardapio/composicao', orderMenuController.listarComposicao);
 router.get('/cardapio/adicionados', orderMenuController.listarAdicionados);
 router.get('/cardapio/item', orderMenuController.listarItensCardapio);
@@ -24,6 +26,7 @@ router.patch('/cardapio/item/:id', orderMenuController.atualizarItemCardapio);
 router.delete('/cardapio/item/:id', orderMenuController.deletarItemCardapio);
 router.delete('/cardapio/secao/:id', orderMenuController.deletarSecaoCardapio);
 router.delete('/cardapio/adicional/:id', orderMenuController.deletarAdicionalCardapio);
+
 
 // router.get('/cardapio', orderMenuController.listarItensCardapio);
 

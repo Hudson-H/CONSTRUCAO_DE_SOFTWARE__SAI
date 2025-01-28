@@ -1,4 +1,5 @@
 const orderMenuService = require('../services/orderMenuService');
+const db = require('../config/db');  // Conexão com o banco de dados
 
 
 const listarComposicao = async (req, res) => {
@@ -230,6 +231,92 @@ const atualizarItemCardapio = async (req, res) => {
   }
 };
 
+const atualizarEstoqueAposPedido = async (req, res) => {
+  const ID = req.params.id;
+  console.log("Id = " + ID);
+
+  try {
+    if (!ID || isNaN(ID)) {
+      return res.status(400).json({ error: 'ID inválido fornecido.' });
+    }
+
+    // Inicia a transação
+    db.beginTransaction(async (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Erro ao iniciar a transação.' });
+      }
+
+      try {
+        const { idItemsCardapio, adicionais } = await orderMenuService.atualizarEstoqueAposPedido(ID);
+
+        for (const adicional of adicionais) {
+          const { idItem, quantidade } = adicional;
+
+          // Buscar lotes no estoque para o item atual
+          const lotes = await orderMenuService.buscarEstoquePorItem(idItem);
+          console.log("Lotes = ", lotes);
+          if (!lotes || lotes.length === 0) {
+            db.rollback(() => {
+              res.status(500).json({ error: 'Erro ao atualizar Estoque no lote de item ' +idItem});
+            });
+            // return db.rollback(() => {
+            //   return res.status(404).json({ error: `Estoque não encontrado para o item ${idItem}.` });
+            // });
+          }
+
+          // Passa tanto os lotes quanto a quantidade para a função que vai atualizar o estoque
+          await orderMenuService.atualizarAdicionaisAposPedido(lotes, quantidade);
+        }
+
+        for (const itemCardapio of idItemsCardapio) {
+          console.log("Itens cardapio: " + itemCardapio);
+          const itensComposicao = await orderMenuService.listarComposicao({ idItemCardapio: itemCardapio });
+
+          if (!itensComposicao || itensComposicao.length === 0) {
+            console.log(`Itens para o ItemCardápio ${itemCardapio.ID_Item_Cardapio} não encontrados.`);
+            continue; // Se não encontrar itens, continua com o próximo ItemCardápio
+          }
+
+          console.log("Itens Composição:", itensComposicao);
+
+          for (const { ID_Item: idItem, Quantidade_Composicao: quantidade } of itensComposicao) {
+            // Buscar lotes no estoque para o item atual
+            const lotes = await orderMenuService.buscarEstoquePorItem(idItem);
+            console.log("Lotes = ", lotes);
+
+            if (!lotes || lotes.length === 0) {
+              db.rollback(() => {
+                res.status(500).json({ error: 'Erro ao atualizar Estoque no lote de item ' +idItem});
+              });
+            }
+
+            await orderMenuService.atualizarAdicionaisAposPedido(lotes, quantidade); //nome da função ta para adicionais, mas ta errado é pra ser generico
+          }
+        }
+
+        db.commit((err) => {
+          if (err) {
+            return db.rollback(() => {
+              console.error('Erro no commit:', err);
+              res.status(500).json({ error: 'Erro ao finalizar transação.' });
+            });
+          }
+          res.status(201).json({ message: 'Estoque POS atualizado com sucesso.' });
+        });
+
+      } catch (err) {
+        console.error(err);
+        db.rollback(() => {
+          // res.status(500).json({ error: 'Erro ao atualizar Estoque Após Pedido.' });
+        });
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao processar a requisição.' });
+  }
+};
+
 
 const deletarSecaoCardapio = async (req, res) => {
     try {
@@ -294,4 +381,4 @@ const deletarSecaoCardapio = async (req, res) => {
     }
   };
 
-module.exports = {listarComposicao, listarAdicionados, listarItensCardapio, buscarItemCardapioPorID, adicionarItemCardapio, deletarItemCardapio, listarSecoesCardapio, buscarSecaoCardapioPorID, adicionarSecaoCardapio, deletarSecaoCardapio,listarAdicionaisCardapio, buscarAdicionalCardapioPorID, adicionarAdicionalCardapio,  atualizarItemCardapio, deletarAdicionalCardapio};
+module.exports = {listarComposicao, listarAdicionados, listarItensCardapio, buscarItemCardapioPorID, adicionarItemCardapio, deletarItemCardapio, listarSecoesCardapio, buscarSecaoCardapioPorID, adicionarSecaoCardapio, deletarSecaoCardapio,listarAdicionaisCardapio, buscarAdicionalCardapioPorID, adicionarAdicionalCardapio, atualizarEstoqueAposPedido,  atualizarItemCardapio, deletarAdicionalCardapio};
