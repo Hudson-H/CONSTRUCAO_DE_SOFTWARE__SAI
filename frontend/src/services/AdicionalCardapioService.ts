@@ -2,7 +2,7 @@ import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import IAdicionalCardapio from "../utils/interfaces/adicionalCardapio";
 
-const AdicionalCardapioData: IAdicionalCardapio[] = [
+let adicionalCardapioData: IAdicionalCardapio[] = [
   {
     id: "0",
     nome: "Adicional 1",
@@ -22,7 +22,7 @@ const AdicionalCardapioData: IAdicionalCardapio[] = [
 
 const AdicionalCardapioService = {
   list: async (): Promise<IAdicionalCardapio[]> => {
-    return AdicionalCardapioData;
+    return adicionalCardapioData;
 
     try {
       const response = await api.get("/cardapio/adicional");
@@ -34,7 +34,7 @@ const AdicionalCardapioService = {
   },
 
   get: async (id: string): Promise<IAdicionalCardapio> => {
-    return AdicionalCardapioData.filter(adicional => adicional.id === id)[0];
+    return adicionalCardapioData.filter(adicional => adicional.id === id)[0];
 
     try {
       const response = await api.get(`/cardapio/adicional/${id}`);
@@ -46,8 +46,8 @@ const AdicionalCardapioService = {
   },
 
   add: async (adicional: IAdicionalCardapio): Promise<IAdicionalCardapio> => {
-    AdicionalCardapioData.unshift(adicional);
-    return AdicionalCardapioData[0];
+    adicionalCardapioData.unshift(adicional);
+    return adicionalCardapioData[0];
 
     try {
       const response = await api.post("/cardapio/adicional", adicional);
@@ -59,8 +59,8 @@ const AdicionalCardapioService = {
   },
 
   update: async (adicional: IAdicionalCardapio): Promise<IAdicionalCardapio> => {
-    AdicionalCardapioData[AdicionalCardapioData.findIndex(item => item.id === adicional.id)] = adicional;
-    return AdicionalCardapioData[AdicionalCardapioData.findIndex(item => item.id === adicional.id)];
+    adicionalCardapioData[adicionalCardapioData.findIndex(item => item.id === adicional.id)] = adicional;
+    return adicionalCardapioData[adicionalCardapioData.findIndex(item => item.id === adicional.id)];
 
     try {
       const response = await api.put(`/cardapio/adicional/${adicional.id}`, adicional);
@@ -72,7 +72,7 @@ const AdicionalCardapioService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    AdicionalCardapioData.splice(AdicionalCardapioData.findIndex(adicional => adicional.id === id), 1);
+    adicionalCardapioData = adicionalCardapioData.filter(c => c.id !== id);
     return;
 
     try {
