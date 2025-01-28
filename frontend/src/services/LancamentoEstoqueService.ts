@@ -8,24 +8,28 @@ let lancamentoEstoqueData: ILancamentoEstoque[] = [
     item: "Item 1",
     quantidade: 10,
     dataCompra: new Date(),
-  },
-  {
-    id: "0",
-    item: "Item 1",
-    quantidade: 10,
-    dataCompra: new Date(),
+    dataValidade: new Date(),
   },
   {
     id: "1",
-    item: "Item 2",
-    quantidade: 20,
+    item: "Item 1",
+    quantidade: 10,
     dataCompra: new Date(),
+    dataValidade: new Date(),
   },
   {
     id: "2",
+    item: "Item 2",
+    quantidade: 20,
+    dataCompra: new Date(),
+    dataValidade: new Date(),
+  },
+  {
+    id: "3",
     item: "Item 3",
     quantidade: 30,
     dataCompra: new Date(),
+    dataValidade: new Date(),
   }
 ]
 

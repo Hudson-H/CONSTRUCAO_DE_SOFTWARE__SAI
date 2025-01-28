@@ -68,6 +68,7 @@ const SecaoCardapioService = {
 
   delete: async (id: string): Promise<void> => {
     secaoCardapioData = secaoCardapioData.filter((secao) => secao.id !== id);
+    return;
 
     try {
       await api.delete(`/cardapio/secao/${id}`);

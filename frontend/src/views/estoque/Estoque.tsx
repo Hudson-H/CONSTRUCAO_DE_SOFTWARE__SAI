@@ -3,7 +3,7 @@ import Button from "../../components/atoms/Button/Button";
 import { Title } from "../../components/atoms/Title/Title";
 import { useEffect, useState } from "react";
 import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { DataTableBar } from "../../components/molecules/DataTableBar/DataTableBar";
 import { textColors } from "../../utils/style/TextColor";
 import { text } from "stream/consumers";
@@ -21,62 +21,8 @@ const categories = Object.freeze({
   lancamento: "Lançamento",
 } as const);
 
-const itemDescriptor: DataTableDescriptor[] = [
-  { title: "ID"         , type: "text" , size: 1 , key: "id" },
-  { title: "Categoria"  , type: "text" , size: 3 , key: "categoria" },
-  { title: "Nome"       , type: "text" , size: 4 , key: "nome" },
-  { title: "Un. Medida" , type: "text" , size: 3 , key: "unidadeMedida" },
-  {
-    type: "action",
-    key: "edit",
-    icon: <Pencil className={textColors["blue"]} size={24} />,
-    action: () => { console.log("Edit") }
-  },
-  {
-    key: "delete",
-    type: "action",
-    icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Edit") }
-  }
-];
-
-const categoriaDescriptor: DataTableDescriptor[] = [
-  { title: "ID"         , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"       , type: "text" , size: 10 , key: "nome" },
-  {
-    type: "action",
-    key: "edit",
-    icon: <Pencil className={textColors["blue"]} size={24} />,
-    action: () => { console.log("Edit") }
-  },
-  {
-    key: "delete",
-    type: "action",
-    icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Edit") }
-  }
-];
-
-const lancamentoDescriptor: DataTableDescriptor[] = [
-  { title: "ID"            , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"          , type: "text" , size: 3 , key: "nome" },
-  { title: "Data Compra"   , type: "date" , size: 3 , key: "dataCompra" },
-  { title: "Data Validade" , type: "date" , size: 4 , key: "dataValidade" },
-  {
-    type: "action",
-    key: "edit",
-    icon: <Pencil className={textColors["blue"]} size={24} />,
-    action: () => { console.log("Edit") }
-  },
-  {
-    key: "delete",
-    type: "action",
-    icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Edit") }
-  }
-];
-
 export function Estoque() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [category, setCategory] = useState<keyof typeof categories>(
@@ -86,6 +32,97 @@ export function Estoque() {
   const [itemData, setItemData] = useState<IItemEstoque[]>([]);
   const [categoryData, setCategoryData] = useState<ICategoriaEstoque[]>([]);
   const [lancamentoData, setLancamentoData] = useState<ILancamentoEstoque[]>([]);
+
+  const itemDescriptor: DataTableDescriptor[] = [
+    { title: "ID"         , type: "text" , size: 1 , key: "id" },
+    { title: "Categoria"  , type: "text" , size: 3 , key: "categoria" },
+    { title: "Nome"       , type: "text" , size: 4 , key: "nome" },
+    { title: "Un. Medida" , type: "text" , size: 3 , key: "unidadeMedida" },
+    {
+      type: "action",
+      key: "edit",
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: async (data: IItemEstoque) => {
+        navigate(`/estoque/item/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: IItemEstoque) => {
+        try {
+          await ItemEstoqueService.delete(data.id);
+
+          const newData = await ItemEstoqueService.list();
+          setItemData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ];
+
+  const categoriaDescriptor: DataTableDescriptor[] = [
+    { title: "ID"         , type: "text" , size: 1 , key: "id" },
+    { title: "Nome"       , type: "text" , size: 10 , key: "nome" },
+    {
+      type: "action",
+      key: "edit",
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: async (data: ICategoriaEstoque) => {
+        navigate(`/estoque/categoria/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: ICategoriaEstoque) => {
+        try {
+          await CategoriaEstoqueService.delete(data.id);
+
+          const newData = await CategoriaEstoqueService.list();
+          setCategoryData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ];
+
+  const lancamentoDescriptor: DataTableDescriptor[] = [
+    { title: "ID"            , type: "text" , size: 1 , key: "id" },
+    { title: "Nome"          , type: "text" , size: 3 , key: "nome" },
+    { title: "Data Compra"   , type: "date" , size: 3 , key: "dataCompra" },
+    { title: "Data Validade" , type: "date" , size: 4 , key: "dataValidade" },
+    {
+      type: "action",
+      key: "edit",
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: async (data: ILancamentoEstoque) => {
+        navigate(`/estoque/lancamento/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: ILancamentoEstoque) => {
+        try {
+          await LancamentoEstoqueService.delete(data.id);
+
+          const newData = await LancamentoEstoqueService.list();
+          setLancamentoData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ];
 
   useEffect(() => {
     ItemEstoqueService.list().then((data) => {
