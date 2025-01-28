@@ -57,11 +57,12 @@ const deletarUsuario = async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
+
     await userService.deletarUsuario(userId);
 
     res.status(200).json({ message: 'Usuário deletado com sucesso.' });
   } catch (err) {
-    console.error('Erro ao deletar usuário:', err.message);
+    console.error('Erro ao deletar usuário:', err);
     res.status(500).json({ error: 'Erro interno ao deletar usuário.' });
   }
 };

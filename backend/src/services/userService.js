@@ -2,7 +2,7 @@ const db = require('../config/db');  // Conexão com o banco de dados
 
 const adicionarUsuario = (login, senha) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO usuario (Login, Senha) VALUES (?, ?)';
+    const query = 'INSERT INTO Usuario (Login, Senha) VALUES (?, ?)';
 
     db.query(query, [login, senha], (err, result) => {
       if (err) {
@@ -15,7 +15,7 @@ const adicionarUsuario = (login, senha) => {
 
 const listarUsuarios = () => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM usuario', (err, results) => {
+    db.query('SELECT * FROM Usuario', (err, results) => {
       if (err) {
         reject('Erro ao buscar usuários: ' + err);
       }
@@ -26,7 +26,7 @@ const listarUsuarios = () => {
 
 const listarUsuarioPorId = (id) => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM usuarios WHERE id = ?'; // Placeholder seguro para o parâmetro
+    const query = 'SELECT * FROM Usuario WHERE id = ?'; // Placeholder seguro para o parâmetro
     db.query(query, [id], (err, results) => {
       if (err) {
         return reject('Erro ao buscar usuário: ' + err);
@@ -39,21 +39,58 @@ const listarUsuarioPorId = (id) => {
   });
 };
 
-const deletarUsuario = (id) => {
+const deletarUsuario = async (id) => {
   return new Promise((resolve, reject) => {
-    const query = 'DELETE FROM usuarios WHERE id = ?';
-    db.query(query, [id], (err, results) => {
-      if (err) {
-        return reject('Erro ao deletar usuário: ' + err);
-      }
-      resolve(results);
+    db.beginTransaction((err) => {
+      if (err) return reject('Erro ao iniciar transação: ' + err);
+
+      // Deletar registros dependentes na tabela Permitido
+      const query1 = 'DELETE FROM Permitido WHERE idUsuario = ?';
+      db.query(query1, [id], (err) => {
+        if (err) {
+          return db.rollback(() => {
+            reject('Erro ao deletar registros dependentes na tabela Permitido: ' + err);
+          });
+        }
+
+        // Deletar registros dependentes na tabela Funcionario
+        const query2 = 'DELETE FROM Funcionario WHERE ID_Usuario = ?';
+        db.query(query2, [id], (err) => {
+          if (err) {
+            return db.rollback(() => {
+              reject('Erro ao deletar registros dependentes na tabela Funcionario: ' + err);
+            });
+          }
+
+          // Deletar o usuário
+          const query3 = 'DELETE FROM Usuario WHERE ID = ?';
+          db.query(query3, [id], (err) => {
+            if (err) {
+              return db.rollback(() => {
+                reject('Erro ao deletar usuário: ' + err);
+              });
+            }
+
+            // Confirmar transação
+            db.commit((err) => {
+              if (err) {
+                return db.rollback(() => {
+                  reject('Erro ao confirmar transação: ' + err);
+                });
+              }
+              resolve({ message: 'Usuário e dependências deletados com sucesso.' });
+            });
+          });
+        });
+      });
     });
   });
-}
+};
+
 
 const atualizarUsuario = (id, nome, email) => {
   return new Promise((resolve, reject) => {
-    const query = 'UPDATE usuarios SET nome = ?, email = ? WHERE id = ?';
+    const query = 'UPDATE Usuario SET nome = ?, email = ? WHERE id = ?';
     db.query(query, [nome, email, id], (err, results) => {
       if (err) {
         return reject('Erro ao atualizar usuário: ' + err);
