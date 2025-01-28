@@ -70,7 +70,7 @@ const deletarUsuario = async (req, res) => {
 const atualizarUsuario = async (req, res) => {
   try {
     const userId = req.params.id;
-    const { nome, email } = req.body;
+    const { Login, Senha } = req.body;
 
     if (!userId || isNaN(userId)) {
       return res.status(400).json({ error: 'ID inválido fornecido.' });
@@ -82,7 +82,7 @@ const atualizarUsuario = async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
-    await userService.atualizarUsuario(userId, nome, email);
+    await userService.atualizarUsuario(userId, Login, Senha);
 
     res.status(200).json({ message: 'Usuário atualizado com sucesso.' });
   } catch (err) {

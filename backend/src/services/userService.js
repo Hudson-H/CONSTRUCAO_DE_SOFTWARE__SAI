@@ -44,7 +44,6 @@ const deletarUsuario = async (id) => {
     db.beginTransaction((err) => {
       if (err) return reject('Erro ao iniciar transação: ' + err);
 
-      // Deletar registros dependentes na tabela Permitido
       const query1 = 'DELETE FROM Permitido WHERE idUsuario = ?';
       db.query(query1, [id], (err) => {
         if (err) {
@@ -53,7 +52,6 @@ const deletarUsuario = async (id) => {
           });
         }
 
-        // Deletar registros dependentes na tabela Funcionario
         const query2 = 'DELETE FROM Funcionario WHERE ID_Usuario = ?';
         db.query(query2, [id], (err) => {
           if (err) {
@@ -62,7 +60,6 @@ const deletarUsuario = async (id) => {
             });
           }
 
-          // Deletar o usuário
           const query3 = 'DELETE FROM Usuario WHERE ID = ?';
           db.query(query3, [id], (err) => {
             if (err) {
@@ -71,7 +68,6 @@ const deletarUsuario = async (id) => {
               });
             }
 
-            // Confirmar transação
             db.commit((err) => {
               if (err) {
                 return db.rollback(() => {
@@ -87,10 +83,9 @@ const deletarUsuario = async (id) => {
   });
 };
 
-
 const atualizarUsuario = (id, nome, email) => {
   return new Promise((resolve, reject) => {
-    const query = 'UPDATE Usuario SET nome = ?, email = ? WHERE id = ?';
+    const query = 'UPDATE Usuario SET Login = ?, Senha = ? WHERE id = ?';
     db.query(query, [nome, email, id], (err, results) => {
       if (err) {
         return reject('Erro ao atualizar usuário: ' + err);
