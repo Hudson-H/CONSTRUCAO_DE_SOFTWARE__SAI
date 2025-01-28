@@ -28,7 +28,7 @@ export function DataTableBar({ title, className }: DataTableBarProps) {
         value={searchValue}
         onChange={handleSearch}
         placeholder={
-          `Buscar por ${title.toLowerCase()}`
+          `Buscar por: '${title.toLowerCase()}'`
         }
         icon={<MagnifyingGlass className="opacity-25" weight="bold" size={16}/>}
         className="text-sm h-full"

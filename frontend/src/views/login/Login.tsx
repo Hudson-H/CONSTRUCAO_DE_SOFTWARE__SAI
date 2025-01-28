@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import Input from "../../components/atoms/Input/Input";
 import { SAILogo } from "../../components/molecules/SAILogo/SAILogo";
 import { Sidebar } from "../../components/atoms/Sidebar/Sidebar";
@@ -6,7 +6,7 @@ import { FormField } from "../../components/molecules/FormField/FormField";
 import { Label } from "../../components/atoms/Label/Label";
 import Button from "../../components/atoms/Button/Button";
 import { useNavigate } from "react-router-dom";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "react-toastify";
@@ -23,7 +23,7 @@ type loginFormData = z.infer<typeof loginFormSchema>;
 
 export function Login() {
   const navigate = useNavigate();
-  const { authenticated, login } = useContext(AuthContext);
+  const { isAuthenticated, login } = useContext(AuthContext);
 
   const {
     handleSubmit,
@@ -36,13 +36,19 @@ export function Login() {
 
   const loginValue = watch("login");
   const passwordValue = watch("password");
+  const [authenticated, setAuthenticated] = useState(false);
 
-  if (authenticated) navigate("/dashboard");
+  useEffect(() => {
+    isAuthenticated().then(value => {
+      if (value) navigate("/dashboard");
+    })
+  }, [authenticated])
 
   async function handleLogin(data: loginFormData) {
     try {
       await login(data.login, data.password);
       toast.info("Login realizado com sucesso!");
+      setAuthenticated(true);
     } catch (err) {
       if (err instanceof Error)
         toast.error(err.message);

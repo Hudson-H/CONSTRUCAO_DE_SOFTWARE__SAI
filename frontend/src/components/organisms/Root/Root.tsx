@@ -1,11 +1,12 @@
-import { ReactNode } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { ReactNode, useContext, useEffect } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Sidebar } from "../../atoms/Sidebar/Sidebar";
 import { Header } from "../Header/Header";
 import { PlusCircle, ListMagnifyingGlass, BookOpen, Package, UsersThree } from "@phosphor-icons/react";
 import { Label } from "../../atoms/Label/Label";
 import Button from "../../atoms/Button/Button";
 import { SAILogo } from "../../molecules/SAILogo/SAILogo";
+import { AuthContext } from "../../../context/AuthContext";
 
 const sidebarButtons = [
   { label: "Novo Pedido"  , icon: <PlusCircle size={24} />          , linkTo: "/pedido/novo"},
@@ -35,6 +36,15 @@ function SidebarButton({ label, icon, linkTo }: SidebarButtonProps) {
 }
 
 export function Root() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    isAuthenticated().then(value => {
+      if (!value) navigate("/login");
+    })
+  }, [])
+
   return <div className="grid grid-cols-12 grid-rows-12 gap-0 h-screen font-display text-base">
     <Sidebar>
       <Link to="/dashboard">

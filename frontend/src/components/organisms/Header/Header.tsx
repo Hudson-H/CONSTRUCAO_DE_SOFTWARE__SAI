@@ -4,9 +4,25 @@ import TrackingButtton from "../../molecules/TrackingButton/TrackingButton";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import Button from "../../atoms/Button/Button";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
-  const { user, authenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const { user, isAuthenticated, logout } = useContext(AuthContext);
+
+  async function handleLogout() {
+    try {
+      await logout();
+      toast.info("Deslogado com sucesso!");
+
+      navigate("/login");
+    } catch (err) {
+      if (err instanceof Error)
+        toast.error(err.message);
+    }
+  }
 
   return <div className="
     items-center inline-flex h-16 px-8 py-2 justify-between col-span-10
@@ -43,6 +59,7 @@ export function Header() {
           color={"gray"}
           children={undefined}
           className=""
+          onClick={handleLogout}
         ></Button>
       </span>
     </div>

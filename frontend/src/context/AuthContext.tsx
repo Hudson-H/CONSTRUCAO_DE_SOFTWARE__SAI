@@ -8,7 +8,6 @@ import IUser from "../utils/interaces/user";
 import UserService from "./UserService";
 
 export interface IAuthContext {
-  authenticated: boolean;
   user?: IUser;
   permissions?: Permission[];
 
@@ -16,6 +15,7 @@ export interface IAuthContext {
   // register: (user: UserRegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
   fetchCurrentUser: () => Promise<void>;
+  isAuthenticated: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -23,8 +23,6 @@ export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | undefined>();
   const [permissions, setPermissions] = useState<Permission[]>();
-
-  const authenticated = !!user;
 
   useEffect(() => {
     const token = Cookie.get("token");
@@ -77,7 +75,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  return <AuthContext.Provider value={{authenticated, user, permissions, login, logout, fetchCurrentUser}}>
+  async function isAuthenticated() {
+    const token = Cookie.get("token");
+
+    if (!token) return false;
+
+    return true;
+  }
+
+  return <AuthContext.Provider value={{isAuthenticated, user, permissions, login, logout, fetchCurrentUser}}>
     { children }
   </AuthContext.Provider>
 }

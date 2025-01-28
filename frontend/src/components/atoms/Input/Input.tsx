@@ -1,7 +1,8 @@
 import { HTMLInputTypeAttribute, ChangeEventHandler, ReactNode } from "react";
+import CurrencyInput from "react-currency-input-field";
 
 type InputProps = {
-  type: HTMLInputTypeAttribute;
+  type: HTMLInputTypeAttribute | "currency";
   disabled?: boolean;
   placeholder: string;
   value: string;
@@ -28,13 +29,34 @@ export default function Input({ type, disabled, placeholder, value, borderless, 
     `}
     >
       {icon && icon}
-      <input
-    type={type}
-        disabled={disabled}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className="w-full h-full leading-normal tracking-wider font-roboto text-justify outline-none select-none"
-      />
+      {type === "currency" ?
+        <CurrencyInput
+          id="validationCustom01"
+          name="input-1"
+          allowDecimals={true}
+          className={`${className}`}
+          decimalScale={2}
+          decimalsLimit={2}
+          fixedDecimalLength={2}
+          allowNegativeValue={false}
+          onValueChange={(value) => {
+            onChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)
+          }}
+          placeholder="Please enter a number"
+          prefix="R$"
+          step={.01}
+          maxLength={5}
+        />
+        :
+        <input
+          type={type}
+          step={type === "number" ? "0.01" : undefined}
+          disabled={disabled}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="w-full h-full leading-normal tracking-wider font-roboto text-justify outline-none select-none overflow-y-visible"
+        />
+      }
   </div>
 }
