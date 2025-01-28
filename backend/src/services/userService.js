@@ -3,15 +3,19 @@ const db = require('../config/db');
 const crypto = require('crypto');
 
 const adicionarUsuario = (login, senha) => {
-  return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO Usuario (Login, Senha) VALUES (?, ?)';
-
-    db.query(query, [login, senha], (err, result) => {
-      if (err) {
-        reject('Erro ao adicionar usuário: ' + err);
-      }
-      resolve(result);
-    });
+  return new Promise(async (resolve, reject) => {
+    try {
+      const hashedSenha = await bcrypt.hash(senha, 10);
+      const query = 'INSERT INTO Usuario (login, senha) VALUES (?, ?)';
+      db.query(query, [login, hashedSenha], (err, result) => {
+        if (err) {
+          return reject('Erro ao adicionar usuário: ' + err);
+        }
+        resolve(result);
+      });
+    } catch (err) {
+      reject('Erro ao criptografar senha: ' + err);
+    }
   });
 };
 
@@ -142,7 +146,6 @@ const loginUsuario = (req, login, senha) => {
     });
   });
 };
-
 const adicionarTokenTabela = (user_id, token, expiration_time) => {
   console.log('Adicionando token na tabela sessions:', user_id, token, expiration_time);
 
@@ -204,6 +207,5 @@ const atualizarUsuario = (id, login, senha) => {
     }
   });
 };
-
 
 module.exports = { adicionarUsuario, listarUsuarios, loginUsuario, listarUsuarioPorId, atualizarUsuario, deletarUsuario };

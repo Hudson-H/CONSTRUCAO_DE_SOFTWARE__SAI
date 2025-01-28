@@ -1,10 +1,10 @@
 const userService = require('../services/userService');
 
 const adicionarUsuario = async (req, res) => {
-  const { Login, Senha } = req.body;
+  const { login, senha } = req.body;
 
   try {
-    const result = await userService.adicionarUsuario(Login, Senha);
+    const result = await userService.adicionarUsuario(login, senha);
     res.status(201).json({ message: 'Usuário adicionado com sucesso.', userId: result.insertId });
   } catch (err) {
     console.error(err);
@@ -103,5 +103,5 @@ const loginUsuario = async (req, res) => {
   }
 };
 
-
 module.exports = { adicionarUsuario, listarUsuarios, listarUsuarioPorId, deletarUsuario, atualizarUsuario, loginUsuario };
+
