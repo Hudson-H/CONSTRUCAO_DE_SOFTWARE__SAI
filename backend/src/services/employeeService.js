@@ -97,7 +97,6 @@ const atualizarFuncionario = (ID, dados) => {
 
 const deletarFuncionario = (ID) => {
   return new Promise((resolve, reject) => {
-
     const query = `DELETE FROM Funcionario WHERE ID_Usuario = ?`;
     db.query(query, [ID], (err, results) => {
       if (err) {

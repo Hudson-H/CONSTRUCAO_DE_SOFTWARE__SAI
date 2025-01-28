@@ -141,6 +141,8 @@ const atualizarFuncionario = async (req, res) => {
 const deletarFuncionario = async (req, res) => {
   const ID = req.params.id;
 
+  db.beginTransaction();
+
   try {
     const result = await employeeService.deletarFuncionario(ID);
     res.status(201).json({ message: 'Funcionário deletado com sucesso.'});

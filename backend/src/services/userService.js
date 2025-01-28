@@ -1,11 +1,11 @@
 const db = require('../config/db');  // Conexão com o banco de dados
 
-
 const adicionarUsuario = (login, senha) => {
   return new Promise((resolve, reject) => {
     const query = 'INSERT INTO Usuario (Login, Senha) VALUES (?, ?)';
 
     db.query(query, [login, senha], (err, result) => {
+
       if (err) {
         reject('Erro ao adicionar usuário: ' + err);
       }
@@ -17,6 +17,7 @@ const adicionarUsuario = (login, senha) => {
 const listarUsuarios = () => {
   return new Promise((resolve, reject) => {
     db.query('SELECT * FROM Usuario', (err, results) => {
+
       if (err) {
         reject('Erro ao buscar usuários: ' + err);
       }
