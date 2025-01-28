@@ -81,14 +81,21 @@ const deletarEstoque = (id) => {
 }
 
 
-const listarItensEstoque = ({ id_categoria } = {}) => {
-  console.log("listarItensEstoqueService foi chamada!");
+const listarItensEstoque = ({ id_categoria, nome } = {}) => {
+  // console.log("listarItensEstoqueService foi chamada!");
   return new Promise((resolve, reject) => {
     // Se `id_categoria` for passado, adiciona um filtro
-    const query = id_categoria
-      ? 'SELECT * FROM Item WHERE ID_Categoria = ?'
-      : 'SELECT * FROM Item';
-    const params = id_categoria ? [id_categoria] : [];
+    let query = 'SELECT * FROM Item WHERE 1=1'
+    const params = [];
+    if (id_categoria) {
+      query += ' AND ID_Categoria = ?';
+      params.push(id_categoria);
+    }
+
+    if (nome) {
+      query += ' AND Nome LIKE ?';
+      params.push(`%${nome}%`);
+    }
 
     db.query(query, params, (err, results) => {
       if (err) {
