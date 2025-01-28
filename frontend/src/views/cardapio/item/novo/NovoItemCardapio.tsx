@@ -6,6 +6,7 @@ import Button from "../../../../components/atoms/Button/Button";
 import Input from "../../../../components/atoms/Input/Input";
 import { Label } from "../../../../components/atoms/Label/Label";
 import { FormField } from "../../../../components/molecules/FormField/FormField";
+import ItemCardapioService from "../../../../services/ItemCardapioService";
 
 type NovoItemCardapioProps = {};
 
@@ -37,11 +38,14 @@ export function NovoItemCardapio() {
     descricao,
   }: categoryFormData) {
     try {
-      console.log("Novo item do cardápio", {
+      const response = await ItemCardapioService.add({
         nome,
         valor,
         descricao,
+        compostoPor: [],
       });
+
+      console.log(response);
     } catch (err) {
       console.error(err);
     }
@@ -54,8 +58,8 @@ export function NovoItemCardapio() {
       <form
         onSubmit={handleSubmit(handleNew)}
         className="
-        relative w-full h-full flex flex-col justify-center gap-4
-    "
+          relative w-full h-full flex flex-col justify-center gap-4
+        "
       >
         <div className="grid grid-cols-12 gap-4">
           <FormField

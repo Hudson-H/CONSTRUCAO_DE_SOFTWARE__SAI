@@ -21,7 +21,7 @@ const categories = Object.freeze({
 const orderDescriptor: DataTableDescriptor[] = [
   { title: "ID"          , type: "text"   , size: 1 , key: "id" },
   { title: "Status"      , type: "text"   , size: 3 , key: "status" },
-  { title: "Método Pgto.", type: "text"   , size: 4 , key: "metodo_pgto" },
+  { title: "Método Pgto.", type: "text"   , size: 4 , key: "metodoPgto" },
   { title: "Valor"       , type: "text" , size: 3 , key: "valor" },
   {
     type: "action",
@@ -38,26 +38,6 @@ const orderDescriptor: DataTableDescriptor[] = [
     action: () => { console.log("Edit") }
   }
 ];
-const orderData = [
-  {
-    id: 0,
-    status: "Em Espera",
-    metodo_pgto: "Dinheiro",
-    valor: "R$10,00"
-  },
-  {
-    id: 1,
-    status: "Preparando",
-    metodo_pgto: "Cartão",
-    valor: "R$20,00"
-  },
-  {
-    id: 2,
-    status: "Pronto",
-    metodo_pgto: "Pix",
-    valor: "R$30,00"
-  }
-];
 
 export function Pedido() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -65,6 +45,8 @@ export function Pedido() {
   const [category, setCategory] = useState<keyof typeof categories>(
     searchParams.get("category") as keyof typeof categories || "todos"
   );
+
+  const [orderData, setOrderData] = useState([]);
 
   const changeCategory = (category: keyof typeof categories) => {
     setSearchParams({["category"]: category});
@@ -91,7 +73,6 @@ export function Pedido() {
           </Button>
         )}
       </div>
-
 
       <DataTableBar title={categories[category]}></DataTableBar>
       <DataTable

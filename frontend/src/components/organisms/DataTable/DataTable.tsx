@@ -2,10 +2,11 @@ import { Pencil, Trash } from "@phosphor-icons/react"
 import { Label } from "../../atoms/Label/Label"
 import { SpanSize, SpanSizeType } from "../../../utils/style/SpanSize"
 import { MouseEvent, MouseEventHandler, ReactNode } from "react"
+import { NavigateFunction, useNavigate } from "react-router-dom"
 
 type DataTableProps = {
   descriptor: DataTableDescriptor[];
-  data: Record<string, string | number | Date>[];
+  data: Object[];
   className?: string;
 }
 
@@ -15,7 +16,7 @@ type DataTableHeaderProps = {
 
 type DataTableRowProps = {
   descriptor: DataTableDescriptor[];
-  data: Record<string, string | number | Date>;
+  data: Object;
 }
 
 export type DataTableDescriptor = {
@@ -24,7 +25,7 @@ export type DataTableDescriptor = {
   key: string;
   size?: SpanSizeType;
 
-  action?: (event: MouseEvent) => void;
+  action?: (data: any) => void;
   icon?: ReactNode;
 }
 
@@ -48,14 +49,28 @@ function DataTableHeader({
 
 function DataTableRow({
   descriptor,
-  data
+  data,
 }: DataTableRowProps) {
   const actions = descriptor.filter(value => value.type === "action");
 
   return (
     <div className="w-full grid grid-cols-12 items-center py-4">
       {descriptor.filter((val) => val.type !== "action").map((item) => {
-        const value = data[item.key].toString();
+        if (!(item.key in data)) return (
+          <Label
+            key={item.title}
+            className={SpanSize[item.size??0]} light
+            children="N/A"
+          ></Label>
+        );
+
+        // @ts-ignore
+        let value = data[item.key];
+        if (item.type === "date") {
+          value = new Date(value).toLocaleDateString();
+        } else if (item.type === "number") {
+          value = new Intl.NumberFormat("pt-BR").format(value);
+        }
 
         return (
           <Label
@@ -70,7 +85,7 @@ function DataTableRow({
         {actions.map((item) => {
           return (
             <div key={item.key}>
-              <div className="cursor-pointer" onClick={(ev) => {if (item.action) item.action(ev)}}>
+              <div className="cursor-pointer" onClick={(ev) => {if (item.action) item.action(data)}}>
                 {item.icon}
               </div>
             </div>

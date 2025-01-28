@@ -1,12 +1,19 @@
 import { Pencil, Trash } from "@phosphor-icons/react";
 import Button from "../../components/atoms/Button/Button";
 import { Title } from "../../components/atoms/Title/Title";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
 import { useSearchParams } from "react-router-dom";
 import { DataTableBar } from "../../components/molecules/DataTableBar/DataTableBar";
 import { textColors } from "../../utils/style/TextColor";
 import { text } from "stream/consumers";
+import IItemEstoque from "../../utils/interfaces/itemEstoque";
+import ICategoriaEstoque from "../../utils/interfaces/categoriaEstoque";
+import ItemEstoqueService from "../../services/ItemEstoqueService";
+import CategoriaEstoqueService from "../../services/CategoriaEstoqueService";
+import { toast } from "react-toastify";
+import LancamentoEstoqueService from "../../services/LancamentoEstoqueService";
+import ILancamentoEstoque from "../../utils/interfaces/lancamentoEstoque";
 
 const categories = Object.freeze({
   item: "Item",
@@ -18,7 +25,7 @@ const itemDescriptor: DataTableDescriptor[] = [
   { title: "ID"         , type: "text" , size: 1 , key: "id" },
   { title: "Categoria"  , type: "text" , size: 3 , key: "categoria" },
   { title: "Nome"       , type: "text" , size: 4 , key: "nome" },
-  { title: "Un. Medida" , type: "text" , size: 3 , key: "unidade_medida" },
+  { title: "Un. Medida" , type: "text" , size: 3 , key: "unidadeMedida" },
   {
     type: "action",
     key: "edit",
@@ -32,26 +39,6 @@ const itemDescriptor: DataTableDescriptor[] = [
     action: () => { console.log("Edit") }
   }
 ];
-const itemData = [
-  {
-    id: 0,
-    categoria: "Categoria 1",
-    nome: "Item 1",
-    unidade_medida: "Un"
-  },
-  {
-    id: 1,
-    categoria: "Categoria 2",
-    nome: "Item 2",
-    unidade_medida: "Un"
-  },
-  {
-    id: 2,
-    categoria: "Categoria 3",
-    nome: "Item 3",
-    unidade_medida: "Un"
-  }
-];
 
 const categoriaDescriptor: DataTableDescriptor[] = [
   { title: "ID"         , type: "text" , size: 1 , key: "id" },
@@ -63,35 +50,18 @@ const categoriaDescriptor: DataTableDescriptor[] = [
     action: () => { console.log("Edit") }
   },
   {
-        key: "delete",
+    key: "delete",
     type: "action",
     icon: <Trash className={textColors["red"]} size={24} />,
     action: () => { console.log("Edit") }
-  }
-];
-const categoryData = [
-  {
-    id: 0,
-    nome: "Categoria 1",
-    descricao: "Descrição da categoria 1"
-  },
-  {
-    id: 1,
-    nome: "Categoria 2",
-    descricao: "Descrição da categoria 2"
-  },
-  {
-    id: 2,
-    nome: "Categoria 3",
-    descricao: "Descrição da categoria 3"
   }
 ];
 
 const lancamentoDescriptor: DataTableDescriptor[] = [
   { title: "ID"            , type: "text" , size: 1 , key: "id" },
   { title: "Nome"          , type: "text" , size: 3 , key: "nome" },
-  { title: "Data Compra"   , type: "text" , size: 3 , key: "data_compra" },
-  { title: "Data Validade" , type: "text" , size: 4 , key: "data_validade" },
+  { title: "Data Compra"   , type: "date" , size: 3 , key: "dataCompra" },
+  { title: "Data Validade" , type: "date" , size: 4 , key: "dataValidade" },
   {
     type: "action",
     key: "edit",
@@ -99,30 +69,10 @@ const lancamentoDescriptor: DataTableDescriptor[] = [
     action: () => { console.log("Edit") }
   },
   {
-        key: "delete",
+    key: "delete",
     type: "action",
     icon: <Trash className={textColors["red"]} size={24} />,
     action: () => { console.log("Edit") }
-  }
-];
-const lancamentoData = [
-  {
-    id: 0,
-    nome: "Lançamento 1",
-    data_compra: "01/01/2021",
-    data_validade: "01/01/2022"
-  },
-  {
-    id: 1,
-    nome: "Lançamento 2",
-    data_compra: "01/01/2021",
-    data_validade: "01/01/2022"
-  },
-  {
-    id: 2,
-    nome: "Lançamento 3",
-    data_compra: "01/01/2021",
-    data_validade: "01/01/2022"
   }
 ];
 
@@ -132,6 +82,30 @@ export function Estoque() {
   const [category, setCategory] = useState<keyof typeof categories>(
     searchParams.get("category") as keyof typeof categories || "item"
   );
+
+  const [itemData, setItemData] = useState<IItemEstoque[]>([]);
+  const [categoryData, setCategoryData] = useState<ICategoriaEstoque[]>([]);
+  const [lancamentoData, setLancamentoData] = useState<ILancamentoEstoque[]>([]);
+
+  useEffect(() => {
+    ItemEstoqueService.list().then((data) => {
+      setItemData(data);
+    }).catch(reason => {
+      toast.error(reason);
+    });
+
+    CategoriaEstoqueService.list().then((data) => {
+      setCategoryData(data);
+    }).catch(reason => {
+      toast.error(reason);
+    });
+
+    LancamentoEstoqueService.list().then((data) => {
+      setLancamentoData(data);
+    }).catch(reason => {
+      toast.error(reason);
+    });
+  }, []);
 
   const changeCategory = (category: keyof typeof categories) => {
     setSearchParams({["category"]: category});

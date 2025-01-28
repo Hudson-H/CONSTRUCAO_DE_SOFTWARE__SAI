@@ -1,12 +1,18 @@
 import { Pencil, Trash } from "@phosphor-icons/react";
 import Button from "../../components/atoms/Button/Button";
-import { Label } from "../../components/atoms/Label/Label";
 import { Title } from "../../components/atoms/Title/Title";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable, DataTableDescriptor } from "../../components/organisms/DataTable/DataTable";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { DataTableBar } from "../../components/molecules/DataTableBar/DataTableBar";
 import { textColors } from "../../utils/style/TextColor";
+import IItemCardapio from "../../utils/interfaces/itemCardapio";
+import ItemCardapioService from "../../services/ItemCardapioService";
+import SecaoCardapioService from "../../services/SeçãoCardapioService";
+import ISecaoCardapio from "../../utils/interfaces/secaoCardapio";
+import IAdicionalCardapio from "../../utils/interfaces/adicionalCardapio";
+import AdicionalCardapioService from "../../services/AdicionalCardapioService";
+import { toast } from "react-toastify";
 
 const categories = Object.freeze({
   item: "Item",
@@ -14,124 +20,123 @@ const categories = Object.freeze({
   adicional: "Adicional"
 } as const);
 
-const itemDescriptor: DataTableDescriptor[] = [
-  { title: "ID"         , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"       , type: "text" , size: 3 , key: "nome" },
-  { title: "Descrição"  , type: "text" , size: 4 , key: "descricao" },
-  { title: "Estratégia" , type: "text" , size: 3 , key: "estrategia_controle" },
-  {
-    type: "action",
-    key: "edit",
-    size: 1,
-    icon: <Pencil className={textColors["blue"]} size={24} />,
-    action: () => { console.log("Edit") }
-  },
-  {
-    key: "delete",
-    type: "action",
-    size: 1,
-    icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Edit") }
-  }
-];
-const itemData = [
-  {
-    id: 0,
-    nome: "Item 1",
-    descricao: "Descrição do item 1",
-    estrategia_controle: "Controle 1"
-  },
-  {
-    id: 0,
-    nome: "Item 2",
-    descricao: "Descrição do item 2",
-    estrategia_controle: "Controle 2"
-  },
-  {
-    id: 0,
-    nome: "Item 3",
-    descricao: "Descrição do item 3",
-    estrategia_controle: "Controle 3"
-  }
-];
-
-const sectionDescriptor: DataTableDescriptor[] = [
-  { title: "ID"        , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"      , type: "text" , size: 10 , key: "nome" },
-  {
-    type: "action",
-    key: "edit",
-    icon: <Pencil className={textColors["blue"]} size={24} />,
-    action: () => { console.log("Edit") }
-  },
-  {
-    key: "delete",
-    type: "action",
-    icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Remove") }
-  }
-];
-const sectionData = [
-  {
-    id: 0,
-    nome: "Seção 1",
-    descricao: "Descrição da seção 1"
-  },
-  {
-    id: 0,
-    nome: "Seção 2",
-    descricao: "Descrição da seção 2"
-  },
-  {
-    id: 0,
-    nome: "Seção 3",
-    descricao: "Descrição da seção 3"
-  }
-];
-
-const additionalDescriptor: DataTableDescriptor[] = [
-  { title: "ID"        , type: "text" , size: 1 , key: "id" },
-  { title: "Nome"      , type: "text" , size: 3 , key: "nome" },
-  { title: "Descrição" , type: "text" , size: 7 , key: "descricao" },
-  {
-    type: "action",
-    key: "edit",
-    size: 1,
-    icon: <Pencil className={textColors["blue"]} size={24} />,
-    action: () => { console.log("Edit") }
-  },
-  {
-    key: "delete",
-    type: "action",
-    size: 1,
-    icon: <Trash className={textColors["red"]} size={24} />,
-    action: () => { console.log("Edit") }
-  }
-];
-const additionalData = [
-  {
-    id: 0,
-    nome: "Adicional 1",
-    descricao: "Descrição do adicional 1"
-  },
-  {
-    id: 0,
-    nome: "Adicional 2",
-    descricao: "Descrição do adicional 2"
-  },
-  {
-    id: 0,
-    nome: "Adicional 3",
-    descricao: "Descrição do adicional 3"
-  }
-];
-
 export function Cardapio() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [category, setCategory] = useState<keyof typeof categories>(
     searchParams.get("category") as keyof typeof categories || "item"
   );
+
+  const [itemData, setItemData] = useState<IItemCardapio[]>([]);
+  const [sectionData, setSectionData] = useState<ISecaoCardapio[]>([]);
+  const [additionalData, setAdditionalData] = useState<IAdicionalCardapio[]>([]);
+
+  const itemDescriptor: DataTableDescriptor[] = [
+    { title: "ID"         , type: "text" , size: 1 , key: "id" },
+    { title: "Nome"       , type: "text" , size: 3 , key: "nome" },
+    { title: "Descrição"  , type: "text" , size: 7 , key: "descricao" },
+    {
+      type: "action",
+      key: "edit",
+      size: 1,
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: (data: IItemCardapio) => {
+        navigate(`/cardapio/item/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      size: 1,
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: IItemCardapio) => {
+        try {
+          await ItemCardapioService.delete(data.id);
+
+          const newData = await ItemCardapioService.list();
+          setItemData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ];
+
+  const sectionDescriptor: DataTableDescriptor[] = [
+    { title: "ID"        , type: "text" , size: 1 , key: "id" },
+    { title: "Nome"      , type: "text" , size: 10 , key: "nome" },
+    {
+      type: "action",
+      key: "edit",
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: async (data: ISecaoCardapio) => {
+        navigate(`/cardapio/secao/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: ISecaoCardapio) => {
+        try {
+          await SecaoCardapioService.delete(data.id);
+
+          const newData = await SecaoCardapioService.list();
+          setSectionData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ];
+
+  const additionalDescriptor: DataTableDescriptor[] = [
+    { title: "ID"        , type: "text" , size: 1 , key: "id" },
+    { title: "Nome"      , type: "text" , size: 10 , key: "nome" },
+    {
+      type: "action",
+      key: "edit",
+      size: 1,
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: async (data: IAdicionalCardapio) => {
+        navigate(`/cardapio/adicional/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      size: 1,
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: IAdicionalCardapio) => {
+        try {
+          await AdicionalCardapioService.delete(data.id);
+
+          const newData = await AdicionalCardapioService.list();
+          setAdditionalData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ];
+
+  useEffect(() => {
+    ItemCardapioService.list().then((data) => {
+      setItemData(data);
+    });
+
+    SecaoCardapioService.list().then((data) => {
+      setSectionData(data);
+    });
+
+    AdicionalCardapioService.list().then((data) => {
+      setAdditionalData(data);
+    });
+  }, []);
 
   const changeCategory = (category: keyof typeof categories) => {
     setSearchParams({["category"]: category});

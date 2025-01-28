@@ -10,6 +10,7 @@ type CurrentUserResponse = IUser & {
 const UserService = {
   currentUser: async (): Promise<CurrentUserResponse> => {
     return {
+      id: "0",
       name: "Teste",
       permissions: ["Estoque"],
     }
