@@ -82,44 +82,46 @@ export default function SearchList({
     onChange([...items]);
   }
 
-  return <div className="flex flex-col w-full min-h-64 px-4 pt-2 py-6 rounded border-2 mt-2">
-    {items.length > 0 ?
-      items.map((item, index) => {
-        return <div key={index} className="w-full flex flex-row justify-between items-center py-4 gap-4">
-          <Label light className="grow">{item.name}</Label>
-          {enablePrice && item.price !== undefined ? <Label>R$ {item.price.toFixed(2)}</Label> : null}
-          {enableAdditionals ?
-            <div className="flex gap-4" >
-              Ver Adicionais
-              <div className="w-6 aspect-square py-0.5 bg-black/15 rounded-3xl justify-center items-center inline-flex overflow-hidden">
-                {item.additionals?.length??0}
+  return <div className="flex flex-col justify-between w-full min-h-64 px-4 pt-2 py-6 rounded border-2 mt-2">
+    <div className="h-full">
+      {items.length > 0 ?
+        items.map((item, index) => {
+          return <div key={index} className="w-full flex flex-row justify-between items-center py-4 gap-4">
+            <Label light className="grow">{item.name}</Label>
+            {enablePrice && item.price !== undefined ? <Label>R$ {item.price.toFixed(2)}</Label> : null}
+            {enableAdditionals ?
+              <div className="flex gap-4" >
+                Ver Adicionais
+                <div className="w-6 aspect-square py-0.5 bg-black/15 rounded-3xl justify-center items-center inline-flex overflow-hidden">
+                  {item.additionals?.length??0}
+                </div>
               </div>
-            </div>
-             : null
-          }
-          {enableAmount ?
-            <div className="inline-flex items-center gap-2">
-              <CaretLeft className="cursor-pointer" onClick={(ev) => {
-                changeQuantity(item, "remove");
-              }}/>
-              {item.amount}
-              <CaretRight className="cursor-pointer" onClick={(ev) => {
-                changeQuantity(item, "add");
-              }}/>
-            </div> :
-            <Trash onClick={(ev) => {
-              removeItem(item);
-            }} className={`${textColors["red"]} cursor-pointer`} size={24} />
-          }
+              : null
+            }
+            {enableAmount ?
+              <div className="inline-flex items-center gap-2">
+                <CaretLeft className="cursor-pointer" onClick={(ev) => {
+                  changeQuantity(item, "remove");
+                }}/>
+                {item.amount}
+                <CaretRight className="cursor-pointer" onClick={(ev) => {
+                  changeQuantity(item, "add");
+                }}/>
+              </div> :
+              <Trash onClick={(ev) => {
+                removeItem(item);
+              }} className={`${textColors["red"]} cursor-pointer`} size={24} />
+            }
+          </div>
+        })
+        :
+        <div className="flex flex-col justify-center w-full h-full text-center py-4">
+          <Label light color="black" className="w-full text-opacity-25">
+            Nenhum item adicionado
+          </Label>
         </div>
-      })
-      :
-      <div className="w-full text-center py-4">
-        <Label light color="black" className="w-full text-opacity-25">
-          Nenhum item adicionado
-        </Label>
-      </div>
-    }
+      }
+    </div>
 
     <Combobox
       value={itemSearch}
