@@ -7,25 +7,25 @@ import Input from "../../atoms/Input/Input";
 import Button from "../../atoms/Button/Button";
 import { Label } from "../../atoms/Label/Label";
 import { FormField } from "../../molecules/FormField/FormField";
-import ICategoriaEstoque from "../../../utils/interfaces/categoriaEstoque";
+import ITipoUnidade from "../../../utils/interfaces/tipoUnidade";
 
-export const categoriaEstoqueFormSchema = z.object({
+export const tipoUnidadeFormSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
-  descricao: z.string(),
+  sigla: z.string(),
 });
 
-export type categoriaEstoqueFormData = z.infer<typeof categoriaEstoqueFormSchema>;
+export type tipoUnidadeFormData = z.infer<typeof tipoUnidadeFormSchema>;
 
-type CategoriaEstoqueFormProps = {
-  data?: ICategoriaEstoque;
+type TipoUnidadeFormSchema = {
+  data?: ITipoUnidade;
 
-  onSubmit: (data: categoriaEstoqueFormData) => void;
+  onSubmit: (data: tipoUnidadeFormData) => void;
 };
 
-export default function CategoriaEstoqueForm({
+export default function TipoUnidadeForm({
   data,
   onSubmit
-}: CategoriaEstoqueFormProps) {
+}: TipoUnidadeFormSchema) {
   const navigate = useNavigate();
 
   const {
@@ -34,12 +34,12 @@ export default function CategoriaEstoqueForm({
     watch,
     reset,
     formState: { isSubmitting, errors },
-  } = useForm<categoriaEstoqueFormData>({
-    resolver: zodResolver(categoriaEstoqueFormSchema),
+  } = useForm<tipoUnidadeFormData>({
+    resolver: zodResolver(tipoUnidadeFormSchema),
   });
 
   const nomeValue = watch("nome");
-  const descricaoValue = watch("descricao");
+  const siglaValue = watch("sigla");
 
   useEffect(() => {
     reset(data);
@@ -78,16 +78,16 @@ export default function CategoriaEstoqueForm({
 
       <div className="grid grid-cols-12 gap-4">
         <FormField
-          haveError={!!errors.descricao}
-          errorMessage={errors.descricao?.message}
+          haveError={!!errors.sigla}
+          errorMessage={errors.sigla?.message}
           className="col-span-3"
         >
-          <Label>Descrição</Label>
+          <Label>Sigla</Label>
           <Input
             type="text"
-            value={descricaoValue ?? ""}
-            onChange={(ev) => setValue("descricao", ev.target.value)}
-            placeholder="Insira a descrição"
+            value={siglaValue ?? ""}
+            onChange={(ev) => setValue("sigla", ev.target.value)}
+            placeholder="Insira a sigla"
             className="font-light"
             borderless
           ></Input>
@@ -102,7 +102,7 @@ export default function CategoriaEstoqueForm({
           outline
           onClick={(ev) => {
             ev.preventDefault();
-            navigate("/estoque?category=categoria")
+            navigate("/estoque?category=tipoUnidade")
           }}
         >
           <Label light className="w-full">
@@ -111,7 +111,7 @@ export default function CategoriaEstoqueForm({
         </Button>
         <Button color="blue" disabled={isSubmitting} className="px-4">
           <Label className="w-full">{
-            data ? "Salvar" : "Nova Categoria"
+            data ? "Salvar" : "Novo Tipo Unidade"
           }</Label>
         </Button>
       </div>

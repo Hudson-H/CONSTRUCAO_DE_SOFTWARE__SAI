@@ -19,6 +19,8 @@ import { EditarCategoriaEstoque } from './views/estoque/categoria/editar/EditarC
 import { NovoCategoriaEstoque } from './views/estoque/categoria/novo/NovoCategoriaEstoque';
 import { NovoLancamentoEstoque } from './views/estoque/lancamento/novo/NovoLancamentoEstoque';
 import { EditarLancamentoEstoque } from './views/estoque/lancamento/editar/EditarLancamentoEstoque';
+import { NovoTipoUnidadeEstoque } from './views/estoque/tipo-unidade/novo/NovoTipoUnidadeEstoque';
+import { EditarTipoUnidadeEstoque } from './views/estoque/tipo-unidade/editar/EditarTipoUnidadeEstoque';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -56,6 +58,10 @@ const router = createBrowserRouter(
         <Route path="lancamento">
           <Route path="novo" element={<NovoLancamentoEstoque/>}></Route>
           <Route path=":id" element={<EditarLancamentoEstoque/>}></Route>
+        </Route>
+        <Route path="tipo-unidade">
+          <Route path="novo" element={<NovoTipoUnidadeEstoque/>}></Route>
+          <Route path=":id" element={<EditarTipoUnidadeEstoque/>}></Route>
         </Route>
 
       </Route>

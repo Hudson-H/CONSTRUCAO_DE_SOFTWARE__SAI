@@ -5,19 +5,21 @@ import SecaoCardapioForm, { secaoCardapioFormData } from "../../../../components
 import SecaoCardapioService from "../../../../services/SecaoCardapioService";
 import CategoriaEstoqueForm, { categoriaEstoqueFormData } from "../../../../components/organisms/CategoriaEstoqueForm/CategoriaEstoqueForm";
 import CategoriaEstoqueService from "../../../../services/CategoriaEstoqueService";
+import TipoUnidadeForm, { tipoUnidadeFormData } from "../../../../components/organisms/TipoUnidadeForm/TipoUnidadeForm";
+import TipoUnidadeService from "../../../../services/TipoUnidadeService";
 
-export function NovoCategoriaEstoque() {
+export function NovoTipoUnidadeEstoque() {
   const navigate = useNavigate();
 
-  async function handleNew({ nome, descricao }: categoriaEstoqueFormData) {
+  async function handleNew({ nome, sigla }: tipoUnidadeFormData) {
     try {
-      const response = await CategoriaEstoqueService.add({
+      const response = await TipoUnidadeService.add({
         nome,
-        descricao
+        sigla
       });
 
-      toast.info("Categoria adicionado com sucesso!");
-      navigate(`/estoque?category=categoria`);
+      toast.info("Tipo Unidade adicionado com sucesso!");
+      navigate(`/estoque?category=tipoUnidade`);
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);
     }
@@ -25,8 +27,8 @@ export function NovoCategoriaEstoque() {
   }
 
   return <div>
-    <Title>Nova Categoria do Estoque</Title>
+    <Title>Novo Tipo Unidade</Title>
 
-    <CategoriaEstoqueForm onSubmit={handleNew} />
+    <TipoUnidadeForm onSubmit={handleNew} />
   </div>
 }

@@ -5,24 +5,27 @@ import SecaoCardapioForm, { secaoCardapioFormData } from "../../../../components
 import SecaoCardapioService from "../../../../services/SecaoCardapioService";
 import { useState, useEffect } from "react";
 import ISecaoCardapio from "../../../../utils/interfaces/secaoCardapio";
-import ICategoriaEstoque from "../../../../utils/interfaces/categoriaEstoque";
+import ICategoriaEstoque from "../../../../utils/interfaces/tipoUnidade";
 import CategoriaEstoqueService from "../../../../services/CategoriaEstoqueService";
 import CategoriaEstoqueForm from "../../../../components/organisms/CategoriaEstoqueForm/CategoriaEstoqueForm";
+import ITipoUnidade from "../../../../utils/interfaces/tipoUnidade";
+import TipoUnidadeService from "../../../../services/TipoUnidadeService";
+import TipoUnidadeForm, { tipoUnidadeFormData } from "../../../../components/organisms/TipoUnidadeForm/TipoUnidadeForm";
 
-export function EditarCategoriaEstoque() {
+export function EditarTipoUnidadeEstoque() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [categoriaEstoque, setCategoriaEstoque] = useState<ICategoriaEstoque>();
+  const [tipoUnidade, setTipoUnidade] = useState<ITipoUnidade>();
 
   useEffect(() => {
     async function fetchData() {
       try {
         if (!id) throw new Error("ID não informado");
 
-        const categoria = await CategoriaEstoqueService.get(id);
+        const tipo = await TipoUnidadeService.get(id);
 
-        setCategoriaEstoque(categoria);
+        setTipoUnidade(tipo);
       } catch (err) {
         if (err instanceof Error) toast.error(err.message);
       }
@@ -31,16 +34,16 @@ export function EditarCategoriaEstoque() {
     fetchData();
   }, [id]);
 
-  async function handleSave({ nome, descricao }: secaoCardapioFormData) {
+  async function handleSave({ nome, sigla }: tipoUnidadeFormData) {
     try {
-      const response = await CategoriaEstoqueService.update({
-        id: categoriaEstoque!.id,
+      const response = await TipoUnidadeService.update({
+        id: tipoUnidade!.id,
         nome,
-        descricao,
+        sigla,
       });
 
       toast.info("Seção salva com sucesso!");
-      navigate(`/estoque?category=categoria`);
+      navigate(`/estoque?category=tipoUnidade`);
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);
     }
@@ -49,6 +52,6 @@ export function EditarCategoriaEstoque() {
   return <div>
     <Title>Editar Categoria do Estoque</Title>
 
-    <CategoriaEstoqueForm onSubmit={handleSave} data={categoriaEstoque}/>
+    <TipoUnidadeForm onSubmit={handleSave} data={tipoUnidade}/>
   </div>
 }
