@@ -14,11 +14,14 @@ import CategoriaEstoqueService from "../../services/CategoriaEstoqueService";
 import { toast } from "react-toastify";
 import LancamentoEstoqueService from "../../services/LancamentoEstoqueService";
 import ILancamentoEstoque from "../../utils/interfaces/lancamentoEstoque";
+import TipoUnidadeService from "../../services/TipoUnidadeService";
+import ITipoUnidade from "../../utils/interfaces/tipoUnidade";
 
 const categories = Object.freeze({
   item: "Item",
   categoria: "Categoria",
   lancamento: "Lançamento",
+  tipoUnidade: "Tipo de Unidade",
 } as const);
 
 export function Estoque() {
@@ -32,12 +35,13 @@ export function Estoque() {
   const [itemData, setItemData] = useState<IItemEstoque[]>([]);
   const [categoryData, setCategoryData] = useState<ICategoriaEstoque[]>([]);
   const [lancamentoData, setLancamentoData] = useState<ILancamentoEstoque[]>([]);
+  const [tipoUnidadeData, setTipoUnidade] = useState<ITipoUnidade[]>([]);
 
   const itemDescriptor: DataTableDescriptor[] = [
     { title: "ID"         , type: "text" , size: 1 , key: "id" },
     { title: "Categoria"  , type: "text" , size: 3 , key: "categoria" },
-    { title: "Nome"       , type: "text" , size: 4 , key: "nome" },
-    { title: "Un. Medida" , type: "text" , size: 3 , key: "unidadeMedida" },
+    { title: "Nome"       , type: "text" , size: 7 , key: "nome" },
+    // { title: "Un. Medida" , type: "text" , size: 3 , key: "tipoUnidade" },
     {
       type: "action",
       key: "edit",
@@ -124,6 +128,36 @@ export function Estoque() {
     }
   ];
 
+  const tipoUnidadeDescriptor: DataTableDescriptor[] = [
+    { title: "ID"            , type: "text" , size: 1 , key: "id" },
+    { title: "Nome"          , type: "text" , size: 3 , key: "nome" },
+    { title: "Sigla"         , type: "text" , size: 7 , key: "sigla" },
+    {
+      type: "action",
+      key: "edit",
+      icon: <Pencil className={textColors["blue"]} size={24} />,
+      action: async (data: ILancamentoEstoque) => {
+        navigate(`/estoque/tipo-unidade/${data.id}`);
+      }
+    },
+    {
+      key: "delete",
+      type: "action",
+      icon: <Trash className={textColors["red"]} size={24} />,
+      action: async (data: ILancamentoEstoque) => {
+        try {
+          await LancamentoEstoqueService.delete(data.id);
+
+          const newData = await LancamentoEstoqueService.list();
+          setLancamentoData(newData);
+        } catch (err) {
+          if (err instanceof Error)
+            toast.error(err.message);
+        }
+      }
+    }
+  ]
+
   useEffect(() => {
     ItemEstoqueService.list().then((data) => {
       setItemData(data);
@@ -142,6 +176,12 @@ export function Estoque() {
     }).catch(reason => {
       toast.error(reason);
     });
+
+    TipoUnidadeService.list().then((data) => {
+      setTipoUnidade(data);
+    }).catch(reason => {
+      toast.error(reason);
+    })
   }, []);
 
   const changeCategory = (category: keyof typeof categories) => {
@@ -173,18 +213,21 @@ export function Estoque() {
       <DataTableBar title={categories[category]} newButtonLink={
         category === "item" ? "/estoque/item/novo" :
         category === "categoria" ? "/estoque/categoria/novo" :
-        "/estoque/lancamento/novo"
+        category === "lancamento" ? "/estoque/lancamento/novo" :
+        "/estoque/tipo-unidade/novo"
       }></DataTableBar>
       <DataTable
         descriptor={
           category === "item" ? itemDescriptor :
           category === "categoria" ? categoriaDescriptor :
-          lancamentoDescriptor
+          category === "lancamento" ? lancamentoDescriptor :
+          tipoUnidadeDescriptor
         }
         data={
           category === "item" ? itemData :
           category === "categoria" ? categoryData :
-          lancamentoData
+          category === "lancamento" ? lancamentoData :
+          tipoUnidadeData
         }
       ></DataTable>
     </div>

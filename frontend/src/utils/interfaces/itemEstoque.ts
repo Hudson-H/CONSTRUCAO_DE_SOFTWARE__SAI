@@ -4,5 +4,9 @@ export default interface IItemEstoque {
   categoria: string;
   descricao: string;
   estrategiaControle?: string;
-  unidadeMedida: string;
+  tipoUnidade: {
+    id: string;
+    nome: string;
+    sigla: string;
+  };
 }

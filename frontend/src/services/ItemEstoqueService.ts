@@ -8,21 +8,33 @@ let itemEstoqueData: IItemEstoque[] = [
     categoria: "Categoria 1",
     descricao: "Descrição do item 1",
     nome: "Item 1",
-    unidadeMedida: "Un"
+    tipoUnidade: {
+      id: "0",
+      nome: "Un",
+      sigla: "Un"
+    }
   },
   {
     id: "1",
     categoria: "Categoria 2",
     descricao: "Descrição do item 2",
     nome: "Item 2",
-    unidadeMedida: "Un"
+    tipoUnidade: {
+      id: "0",
+      nome: "Un",
+      sigla: "Un"
+    }
   },
   {
     id: "2",
     categoria: "Categoria 3",
     descricao: "Descrição do item 3",
     nome: "Item 3",
-    unidadeMedida: "Un"
+    tipoUnidade: {
+      id: "0",
+      nome: "Un",
+      sigla: "Un"
+    }
   }
 ];
 
