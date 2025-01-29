@@ -7,6 +7,9 @@ module.exports = {
         'display': ['Lexend', 'serif']
       }
     },
+    backgroundImage: {
+      'pattern': "url('../public/background-pattern.png')",
+    }
   },
   plugins: [],
 }
