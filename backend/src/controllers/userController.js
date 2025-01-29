@@ -91,4 +91,17 @@ const atualizarUsuario = async (req, res) => {
   }
 }
 
-module.exports = { adicionarUsuario, listarUsuarios, listarUsuarioPorId, deletarUsuario, atualizarUsuario };
+const loginUsuario = async (req, res) => {
+  const { login, senha } = req.body;
+
+  try {
+    const user = await userService.loginUsuario(req, login, senha);
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ error: 'Erro ao validar usuário.' });
+  }
+};
+
+
+module.exports = { adicionarUsuario, listarUsuarios, listarUsuarioPorId, deletarUsuario, atualizarUsuario, loginUsuario };
