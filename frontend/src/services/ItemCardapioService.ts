@@ -2,6 +2,8 @@ import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import IItemCardapio from "../utils/interfaces/itemCardapio";
 
+let UUID = 0;
+
 type AddItemCardapioRequest = Omit<IItemCardapio, "id">;
 
 let itemCardapioData: IItemCardapio[] = [
@@ -52,7 +54,7 @@ const ItemCardapioService = {
 
   add: async (item: AddItemCardapioRequest): Promise<IItemCardapio> => {
     const novoItem: IItemCardapio = {
-      id: Math.random().toString(36).slice(2),
+      id: (UUID++).toString(),
       ...item,
     }
     itemCardapioData.unshift(novoItem);

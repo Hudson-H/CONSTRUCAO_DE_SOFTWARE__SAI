@@ -2,6 +2,9 @@ import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import ISecaoCardapio from "../utils/interfaces/secaoCardapio";
 
+let UUID = 0;
+type AddSecaoCardapioRequest = Omit<ISecaoCardapio, "id">;
+
 let secaoCardapioData: ISecaoCardapio[] = [
   {
     id: "0",
@@ -35,8 +38,11 @@ const SecaoCardapioService = {
     }
   },
 
-  add: async (secao: ISecaoCardapio): Promise<ISecaoCardapio> => {
-    secaoCardapioData.unshift(secao);
+  add: async (secao: AddSecaoCardapioRequest): Promise<ISecaoCardapio> => {
+    secaoCardapioData.unshift({
+      id: (UUID++).toString(),
+      ...secao
+    });
     return secaoCardapioData[0];
 
     try {

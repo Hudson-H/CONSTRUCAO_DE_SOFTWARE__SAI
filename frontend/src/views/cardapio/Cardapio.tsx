@@ -8,7 +8,7 @@ import { DataTableBar } from "../../components/molecules/DataTableBar/DataTableB
 import { textColors } from "../../utils/style/TextColor";
 import IItemCardapio from "../../utils/interfaces/itemCardapio";
 import ItemCardapioService from "../../services/ItemCardapioService";
-import SecaoCardapioService from "../../services/SeçãoCardapioService";
+import SecaoCardapioService from "../../services/SecaoCardapioService";
 import ISecaoCardapio from "../../utils/interfaces/secaoCardapio";
 import IAdicionalCardapio from "../../utils/interfaces/adicionalCardapio";
 import AdicionalCardapioService from "../../services/AdicionalCardapioService";

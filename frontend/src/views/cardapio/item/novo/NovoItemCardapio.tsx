@@ -46,8 +46,6 @@ export function NovoItemCardapio() {
         }),
       });
 
-      console.log({ response });
-
       toast.info("Item adicionado com sucesso!");
       navigate(`/cardapio?category=item`);
     } catch (err) {
