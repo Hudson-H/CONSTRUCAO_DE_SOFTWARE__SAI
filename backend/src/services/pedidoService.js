@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db');
 
 const calcularValorPedido = (idPedido) => {
   return new Promise((resolve, reject) => {

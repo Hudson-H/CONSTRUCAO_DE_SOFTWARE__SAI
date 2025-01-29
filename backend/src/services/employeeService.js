@@ -1,4 +1,5 @@
 const db = require('../config/db');  // Conexão com o banco de dados
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db');
 
 // adiciona um funcionário ao banco
 const adicionarFuncionario = (dados) => {
