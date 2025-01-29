@@ -8,7 +8,7 @@ router.patch('/usuarios/:id', autenticarUsuario, usuarioController.atualizarUsua
 router.get('/usuarios/:id', autenticarUsuario, usuarioController.listarUsuarioPorId);
 router.post('/usuarios', autenticarUsuario, usuarioController.adicionarUsuario);
 router.get('/usuarios', autenticarUsuario, usuarioController.listarUsuarios);
-router.post('/usuarios/login', autenticarUsuario, usuarioController.loginUsuario);
+router.post('/usuarios/login', usuarioController.loginUsuario);
 router.delete('/usuarios/:id', autenticarUsuario, usuarioController.deletarUsuario);
 
 module.exports = router;
