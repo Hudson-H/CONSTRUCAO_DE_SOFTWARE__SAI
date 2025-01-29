@@ -163,7 +163,6 @@ exports.seed = async function(knex) {
       ID_Item_Cardapio: 2,     // ID_Item_Cardapio
       ID_Adicional: null,      // ID_Adicional (null permitido)
       Quantidade_Adicional: 0  // Quantidade_Adicional
-    }
-  ]);
+    }
+  ]);
 };
-

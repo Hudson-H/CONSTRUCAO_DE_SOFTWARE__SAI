@@ -1,3 +1,4 @@
+
 const bcrypt = require('bcrypt');
 const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db'); 
 const crypto = require('crypto');
@@ -176,7 +177,6 @@ const atualizarUsuario = (id, login, senha) => {
     try {
       let query = 'UPDATE Usuario SET ';
       const params = [];
-
       if (login) {
         query += 'login = ?';
         params.push(login);

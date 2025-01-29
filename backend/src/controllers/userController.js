@@ -18,7 +18,8 @@ const listarUsuarios = async (req, res) => {
     res.json(usuarios);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao listar usuários.' });
+
+    res.status(500).json({ error: 'Erro ao buscar usuários.' });
   }
 };
 

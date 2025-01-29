@@ -1,11 +1,10 @@
-const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db'); 
-
+const db = require('../config/db');
 
 const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO Pedido (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO Pedido (idAtendente, senha, data_Pedido, informacoes, id_Pagamento, data_Emissao_Pagamento) VALUES (?, ?, ?, ?, ?, ?)';
 
-    db.query(query, [idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal], (err, result) => {
+    db.query(query, [idAtendente, senha, dataPedido, informacoes, idPagamento, dataEmissaoPagamento], (err, result) => {
       if (err) {
         reject('Erro ao adicionar pedido: ' + err);
       }
@@ -41,11 +40,8 @@ const listarPedidoPorId = (id) => {
   });
 };
 
-
-
 const atualizarPedido = (id, camposParaAtualizar) => {
   return new Promise((resolve, reject) => {
-
     if (!id || !camposParaAtualizar || Object.keys(camposParaAtualizar).length === 0) {
       return reject('Nenhum campo para atualizar fornecido.');
     }
@@ -79,86 +75,4 @@ const deletarPedido = (id) => {
   });
 }
 
-const buscarItemPedidoPorID = (ID) => {
-  return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM ItemPedido WHERE ID_Item_Pedido = ?`;
-  //   console.log("Buscar ItemCardapio, id = " + ID);
-    db.query(query, [ID], (err, results) => {
-      if (err) {
-        return reject('Erro ao buscar ItemPedido: ' + err);
-      }
-      resolve(results);
-    });
-  });
-};
-
-const atualizarItemPedido = (ID, dados) => {
-  return new Promise((resolve, reject) => {
-      const campos = [];
-      const valores = [];
-
-      Object.keys(dados).forEach((campo) => {
-      campos.push(`${campo} = ?`);
-      valores.push(dados[campo]);
-      });
-
-      valores.push(ID);
-
-      const query = `UPDATE ItemPedido SET ${campos.join(', ')} WHERE ID_Item_Pedido = ?`;
-      db.query(query, valores, (err, results) => {
-      if (err) {
-        return reject('Erro ao atualizar ItemPedido: ' + err);
-      }
-      resolve(results);
-      });
-  });
-};
-
-const deletarItemPedido = (id) => {
-  // console.log("Id do Adicional cardapio = " + id);
-  return new Promise((resolve, reject) => {
-    const query = 'DELETE FROM ItemPedido WHERE ID_Item_Pedido = ?';
-    db.query(query, [id], (err, results) => {
-      if (err) {
-        return reject('Erro ao deletar ItemPedido: ' + err);
-      }
-      resolve(results);
-    });
-  });
-}
-
-const adicionarItemPedido = (dados) => {
-  return new Promise((resolve, reject) => {
-    const campos = [];
-    const valores = [];
-    const placeholders = [];
-    
-    Object.keys(dados).forEach((campo) => {
-      campos.push(campo);
-
-      if (dados[campo] == null) {
-        valores.push(null);
-      } else {
-        valores.push(dados[campo]);
-      }
-      
-      placeholders.push('?');
-    });
-
-    const query = 
-      `INSERT INTO ItemPedido 
-      (${campos.join(', ')})
-      VALUES (${placeholders.join(', ')})`;
-
-    db.query(query, valores, (err, result) => {
-      if (err) {
-        return reject('Erro ao adicionar ItemPedido ao Pedido: ' + err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
-
-
-module.exports = { listarPedidos, listarPedidoPorId, adicionarPedido, atualizarPedido, deletarPedido, buscarItemPedidoPorID, atualizarItemPedido, deletarItemPedido, adicionarItemPedido};
+module.exports = { listarPedidos, listarPedidoPorId, adicionarPedido, atualizarPedido, deletarPedido };

@@ -8,5 +8,7 @@ router.get('/funcionarios', autenticarUsuario, employeeController.listarFunciona
 router.get('/funcionarios/:id', autenticarUsuario, employeeController.buscarFuncionarioPorID);
 router.post('/funcionarios', autenticarUsuario, employeeController.adicionarFuncionario);
 router.patch('/funcionarios/:id', autenticarUsuario, employeeController.atualizarFuncionario);
+router.delete('/funcionarios/:id', autenticarUsuario,employeeController.deletarFuncionario);
+
 
 module.exports = router;
