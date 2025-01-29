@@ -10,9 +10,9 @@ router.delete('/pedidos/:id', autenticarUsuario, pedidoController.deletarPedido)
 router.post('/pedidos', autenticarUsuario, pedidoController.adicionarPedido);
 router.get('/pedidos', autenticarUsuario, pedidoController.listarPedidos);
 
-router.get('/pedidos/item/:id', pedidoController.buscarItemPedidoPorID);
-router.patch('/pedidos/item/:id', pedidoController.atualizarItemPedido);
-router.delete('/pedidos/item/:id', pedidoController.deletarItemPedido);
-router.post('/pedidos/item', pedidoController.adicionarItemPedido);
+router.get('/pedidos/item/:id', autenticarUsuario, pedidoController.buscarItemPedidoPorID);
+router.patch('/pedidos/item/:id', autenticarUsuario, pedidoController.atualizarItemPedido);
+router.delete('/pedidos/item/:id', autenticarUsuario, pedidoController.deletarItemPedido);
+router.post('/pedidos/item', autenticarUsuario,  pedidoController.adicionarItemPedido);
 
 module.exports = router;
