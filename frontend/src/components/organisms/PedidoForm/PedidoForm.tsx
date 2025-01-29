@@ -14,9 +14,8 @@ import debounce from "../../../utils/debounce";
 import ItemCardapioService from "../../../services/ItemCardapioService";
 
 export const pedidoFormSchema = z.object({
-  nome: z.string().min(1, "Nome é obrigatório"),
-  valor: z.number().min(0, "Valor deve ser maior que 0"),
-  descricao: z.string(),
+  informacoes: z.string(),
+  valor: z.number(),
 });
 
 export type pedidoFormData = z.infer<typeof pedidoFormSchema>;
@@ -48,7 +47,17 @@ export default function PedidoForm({ data, onSubmit }: PedidoFormProps) {
     []
   );
 
-  const totalPrice = itemData.reduce((prev, cur) => prev += (cur?.price)??0, 0)
+  const informacoesValue = watch("informacoes");
+  const valorValue = watch("valor");
+
+  useEffect(() => {
+    const totalPrice = itemData.reduce((prev, cur) => prev += (cur?.price)??0, 0);
+    setValue("valor", totalPrice);
+  }, [itemData]);
+
+  useEffect(() => {
+    reset(data);
+  }, [data]);
 
   useEffect(() => {
     if (data?.items) {
@@ -111,12 +120,11 @@ export default function PedidoForm({ data, onSubmit }: PedidoFormProps) {
             }, 100)();
           }}
           onChange={(list) => {
-            console.log(list);
             setItemData(list);
           }}
         ></SearchList>
         <div className="w-full pt-2 flex justify-end">
-          <Label className="text-2xl">Total: {totalPrice.toLocaleString("pt-BR", {
+          <Label className="text-2xl">Total: {valorValue?.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
           })}</Label>
@@ -141,6 +149,8 @@ export default function PedidoForm({ data, onSubmit }: PedidoFormProps) {
             outline-none select-none overflow-y-visible
             font-light
           "
+          value={informacoesValue}
+          onChange={(ev) => setValue("informacoes", ev.target.value)}
         >
 
         </textarea>

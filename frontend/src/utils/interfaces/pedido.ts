@@ -1,16 +1,16 @@
 export default interface IPedido {
   id: string;
-  senha: string;
-  valor: string;
+  senha: number;
+  valor: number;
   dataPedido: Date;
   estado: string;
   informacoes: string;
-  dataEmissaoPgto: Date;
-  dataPgto: Date;
-  formaPgto: string;
-  valorTotal: string;
-  valorPago: string;
-  troco: string;
+  dataEmissaoPgto?: Date;
+  dataPgto?: Date;
+  formaPgto?: string;
+  valorTotal: number;
+  valorPago: number;
+  troco: number;
   items: {
     id: string,
     nome: string,
@@ -18,6 +18,7 @@ export default interface IPedido {
     adicionais: {
       id: string,
       nome: string,
+      preco: number,
       quantidade: number
     }[]
   }[]

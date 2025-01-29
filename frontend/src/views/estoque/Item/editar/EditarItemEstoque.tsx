@@ -1,20 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Title } from "../../../../components/atoms/Title/Title";
 import { toast } from "react-toastify";
-import SecaoCardapioForm, {
-  secaoCardapioFormData,
-} from "../../../../components/organisms/SecaoCardapioForm/SecaoCardapioForm";
-import SecaoCardapioService from "../../../../services/SecaoCardapioService";
-import AdicionalCardapioForm, {
-  adicionalCardapioFormData,
-} from "../../../../components/organisms/AdicionalCardapioForm/AdicionalCardapioForm";
-import AdicionalCardapioService from "../../../../services/AdicionalCardapioService";
 import ItemEstoqueService from "../../../../services/ItemEstoqueService";
 import ItemEstoqueForm, {
   itemEstoqueFormData,
 } from "../../../../components/organisms/ItemEstoqueForm/ItemEstoqueForm";
 import { useState, useEffect } from "react";
-import IAdicionalCardapio from "../../../../utils/interfaces/adicionalCardapio";
 import IItemEstoque from "../../../../utils/interfaces/itemEstoque";
 
 export function EditarItemEstoque() {

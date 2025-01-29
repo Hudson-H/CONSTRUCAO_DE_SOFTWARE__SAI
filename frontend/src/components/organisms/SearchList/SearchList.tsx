@@ -9,7 +9,7 @@ export type SearchListRow = {
   key: string;
   name: string;
   price?: number;
-  additionals?: string[];
+  additionals?: SearchListRow[];
   amount?: number;
 };
 
@@ -22,6 +22,7 @@ type SearchListProps = {
   enableAdditionals?: boolean;
   enableAmount?: boolean;
   doNotStackItens?: boolean;
+  disableSearch?: boolean;
 
   onSearchChange: (search: string) => void;
   onChange: (value: SearchListRow[]) => void;
@@ -36,6 +37,7 @@ export default function SearchList({
   enableAdditionals,
   enableAmount,
   doNotStackItens,
+  disableSearch,
 
   onSearchChange,
   onChange,

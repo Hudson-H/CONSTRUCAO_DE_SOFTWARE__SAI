@@ -22,6 +22,7 @@ import { EditarLancamentoEstoque } from './views/estoque/lancamento/editar/Edita
 import { NovoTipoUnidadeEstoque } from './views/estoque/tipo-unidade/novo/NovoTipoUnidadeEstoque';
 import { EditarTipoUnidadeEstoque } from './views/estoque/tipo-unidade/editar/EditarTipoUnidadeEstoque';
 import { NovoPedido } from './views/pedido/novo/NovoPedido';
+import { EditarPedido } from './views/pedido/editar/EditarPedido';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -48,6 +49,7 @@ const router = createBrowserRouter(
       <Route path="/pedido">
         <Route path="" element={<Pedido/>}></Route>
         <Route path="novo" element={<NovoPedido/>}></Route>
+        <Route path=":id" element={<EditarPedido/>}></Route>
       </Route>
       <Route path="/estoque">
         <Route path="" element={<Estoque/>}></Route>
