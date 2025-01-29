@@ -1,12 +1,18 @@
 const pedidoService = require('../services/pedidoService');
+const db = require('../config/db')
 
 const adicionarPedido = async (req, res) => {
-  const { idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal } = req.body;
+  const { idAtendente, Senha, Data_Pedido, Informacoes, ID_Pagamento, Data_Emissao_Pagamento } = req.body;
 
+  db.beginTransaction();
   try {
-    const result = await pedidoService.adicionarPedido(idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal);
+    const result = await pedidoService.adicionarPedido(idAtendente, Senha, Data_Pedido, Informacoes, ID_Pagamento, Data_Emissao_Pagamento);
+    const valor_total = await pedidoService.calcularValorPedido(result.insertId);
+    const atualiza_pedido = await pedidoService.atualizarPedido(result.insertId, valor_total[0]);
+    db.commit();
     res.status(201).json({ message: 'Pedido adicionado com sucesso.', pedidoId: result.insertId });
   } catch (err) {
+    db.rollback();
     console.error(err);
     res.status(500).json({ error: 'Erro ao adicionar pedido.' });
   }

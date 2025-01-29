@@ -1,11 +1,57 @@
 const db = require('../config/db');
 
-const adicionarPedido = (idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal) => {
+const calcularValorPedido = (idPedido) => {
   return new Promise((resolve, reject) => {
+    const query = `
+    SELECT 
+      SUM(adicionais.Preco_Item) +
+      SUM(
+        CASE
+          WHEN adic.Valor IS NOT NULL THEN adic.Valor * adicionais.Quantidade_Adicional
+          ELSE 0
+        END
+      ) AS Valor_Total
+    FROM 
+      Adicional adic 
+    RIGHT OUTER JOIN (
+      SELECT 
+        result.ID_Item_Cardapio, 
+        result.ID_Adicional, 
+        result.Quantidade_Adicional, 
+        IC.Valor AS Preco_Item 
+      FROM 
+        ItemCardapio IC 
+      JOIN (
+        SELECT 
+            AD.ID_Item_Cardapio, 
+            AD.ID_Adicional, 
+            AD.Quantidade_Adicional 
+        FROM 
+          ItemPedido IP
+        NATURAL JOIN 
+          Adicionar AD 
+        WHERE 
+          ID_Pedido = 1
+      ) AS result 
+      ON IC.ID = result.ID_Item_Cardapio
+    ) AS adicionais 
+    ON adicionais.ID_Adicional = adic.ID;
+    `;
 
-    const query = 'INSERT INTO Pedido (idAtendente, senha, valor, data_Pedido, informacoes, id_Pagamento, data_Emissao_Pagamento, valor_Total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    db.query(query, [idPedido], (err, result) => {
+      if (err) {
+        reject('Erro ao calcular valor: ' + err);
+      }
+      resolve(result);
+    });
+  });
+}
 
-    db.query(query, [idAtendente, senha, valor, dataPedido, informacoes, idPagamento, dataEmissaoPagamento, valorTotal], (err, result) => {
+const adicionarPedido = (idAtendente, senha, dataPedido, informacoes, idPagamento, dataEmissaoPagamento) => {
+  return new Promise((resolve, reject) => {
+    const query = 'INSERT INTO Pedido (idAtendente, senha, data_Pedido, informacoes, id_Pagamento, data_Emissao_Pagamento) VALUES (?, ?, ?, ?, ?, ?)';
+
+    db.query(query, [idAtendente, senha, dataPedido, informacoes, idPagamento, dataEmissaoPagamento], (err, result) => {
       if (err) {
         reject('Erro ao adicionar pedido: ' + err);
       }
@@ -43,7 +89,6 @@ const listarPedidoPorId = (id) => {
 
 const atualizarPedido = (id, camposParaAtualizar) => {
   return new Promise((resolve, reject) => {
-
     if (!id || !camposParaAtualizar || Object.keys(camposParaAtualizar).length === 0) {
       return reject('Nenhum campo para atualizar fornecido.');
     }
@@ -77,4 +122,4 @@ const deletarPedido = (id) => {
   });
 }
 
-module.exports = { listarPedidos, listarPedidoPorId, adicionarPedido, atualizarPedido, deletarPedido };
+module.exports = { listarPedidos, listarPedidoPorId, adicionarPedido, atualizarPedido, deletarPedido, calcularValorPedido };

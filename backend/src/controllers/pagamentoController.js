@@ -1,11 +1,11 @@
-const pagamentoService = require('../services/pagamentoService');
+const pedidoService = require('../services/pedidoService');
 
 const adicionarPagamento = async (req, res) => {
   const { id } = req.params;
   const camposParaAtualizar = req.body;
 
   try {
-    await pagamentoService.adicionarPagamento(id, camposParaAtualizar);
+    await pedidoService.atualizarPedido(id, camposParaAtualizar);
     res.json({ message: 'Pagamento adicionado com sucesso.' });
   } catch (err) {
     console.error(err);

@@ -78,30 +78,28 @@ exports.up = function(knex) {
                 table.increments('ID').primary();
                 table.string('Nome', 30);
                 table.float('Valor');
+                table.integer('ID_Item').unsigned();        
             });
         })
         .then(() => {
             return knex.schema.createTable('Usuario', (table) => {
                 table.increments('ID').primary();
-                table.string('Login', 30).notNullable();
-                table.integer('Senha').notNullable();
+                table.string('Login', 30);
+                table.integer('Senha');
             });
         })
         .then(() => {
             return knex.schema.createTable('Funcionario', (table) => {
-                table.string('Login', 30).notNullable();
-                table.integer('Senha').notNullable();
-                table.string('Pnome', 30).notNullable();
-                table.string('Unome', 30).notNullable();
-                table.string('Sexo', 10).notNullable();
-                table.string('Endereco', 100).notNullable();
-                table.string('CPF', 11).notNullable();
-                table.float('Salario').notNullable();
-                table.date('Data_Inicio').notNullable();
+                table.string('Pnome', 30);
+                table.increments('ID_Usuario').primary();
+                table.string('Unome', 30);
+                table.string('Sexo', 10);
+                table.string('Endereco', 100);
+                table.string('CPF', 11);
+                table.float('Salario');
+                table.date('Data_Inicio');
                 table.date('Data_Fim');
                 table.date('Data_Inicio_Gerencia');
-                table.enum('Tipo', ['GERENTE', 'ATENDENTE']).notNullable();
-                table.increments('ID_Usuario').primary();
             });
         })
         .then(() => {
@@ -117,7 +115,7 @@ exports.up = function(knex) {
                 table.integer('ID_Item_Cardapio').unsigned().notNullable();
                 table.integer('ID_Adicional').unsigned();
                 table.integer('Quantidade_Adicional');
-                table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio', 'ID_Adicional']);
+                table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio']);
             });
         })
         .then(() => {
@@ -143,6 +141,9 @@ exports.up = function(knex) {
                     table.foreign('ID_Categoria').references('Categoria.ID');
                 })
                 .table('Estoque', (table) => {
+                    table.foreign('ID_Item').references('Item.ID');
+                })
+                .table('Adicional', (table) => {
                     table.foreign('ID_Item').references('Item.ID');
                 })
                 .table('Funcionario', (table) => {
