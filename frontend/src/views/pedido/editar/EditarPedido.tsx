@@ -56,7 +56,7 @@ export function EditarPedido() {
       console.log(response);
 
       toast.info("Pedido alterado com sucesso!");
-      navigate(0);
+      navigate(`/pedido/${response.id}`);
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);
     }

@@ -14,7 +14,7 @@ import { EditarSecaoCardapio } from './views/cardapio/secao/editar/EditarSecaoCa
 import { NovoAdicionalCardapio } from './views/cardapio/adicional/novo/NovoAdicionalCardapio';
 import { EditarAdicionalCardapio } from './views/cardapio/adicional/editar/EditarAdicionalCardapio';
 import { NovoItemEstoque } from './views/estoque/Item/novo/NovoItemEstoque';
-import { EditarItemEstoque } from './views/estoque/Item/editar/EditarItemEstoque';
+import { EditarFuncionario } from './views/funcionario/editar/EditarFuncionario';
 import { EditarCategoriaEstoque } from './views/estoque/categoria/editar/EditarCategoriaEstoque';
 import { NovoCategoriaEstoque } from './views/estoque/categoria/novo/NovoCategoriaEstoque';
 import { NovoLancamentoEstoque } from './views/estoque/lancamento/novo/NovoLancamentoEstoque';
@@ -23,6 +23,9 @@ import { NovoTipoUnidadeEstoque } from './views/estoque/tipo-unidade/novo/NovoTi
 import { EditarTipoUnidadeEstoque } from './views/estoque/tipo-unidade/editar/EditarTipoUnidadeEstoque';
 import { NovoPedido } from './views/pedido/novo/NovoPedido';
 import { EditarPedido } from './views/pedido/editar/EditarPedido';
+import { Funcionario } from './views/funcionario/Funcionario';
+import { NovoFuncionario } from './views/funcionario/novo/NovoFuncionario';
+import { EditarItemEstoque } from './views/estoque/Item/editar/EditarItemEstoque';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -69,6 +72,11 @@ const router = createBrowserRouter(
           <Route path="novo" element={<NovoTipoUnidadeEstoque/>}></Route>
           <Route path=":id" element={<EditarTipoUnidadeEstoque/>}></Route>
         </Route>
+      </Route>
+      <Route path="/funcionario">
+        <Route path="" element={<Funcionario/>}></Route>
+        <Route path="novo" element={<NovoFuncionario/>}></Route>
+        <Route path=":id" element={<EditarFuncionario/>}></Route>
       </Route>
 
       <Route path="cardapio/item/novo"></Route>

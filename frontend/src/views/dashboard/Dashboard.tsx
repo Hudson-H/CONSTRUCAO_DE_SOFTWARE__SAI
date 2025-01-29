@@ -5,6 +5,5 @@ import { Label } from "../../components/atoms/Label/Label";
 
 export function Dashboard() {
     return <div className="">
-      a
     </div>
 }
