@@ -9,20 +9,20 @@ import { Label } from "../../atoms/Label/Label";
 import { FormField } from "../../molecules/FormField/FormField";
 import ISecaoCardapio from "../../../utils/interfaces/secaoCardapio";
 
-export const secaoCardapioFormSchema = z.object({
+export const categoriaEstoqueFormSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
   descricao: z.string(),
 });
 
-export type secaoCardapioFormData = z.infer<typeof secaoCardapioFormSchema>;
+export type categoriaEstoqueFormData = z.infer<typeof categoriaEstoqueFormSchema>;
 
 type SecaoCardapioFormProps = {
   data?: ISecaoCardapio;
 
-  onSubmit: (data: secaoCardapioFormData) => void;
+  onSubmit: (data: categoriaEstoqueFormData) => void;
 };
 
-export default function SecaoCardapioForm({
+export default function CategoriaiEstoqueForm({
   data,
   onSubmit
 }: SecaoCardapioFormProps) {
@@ -34,8 +34,8 @@ export default function SecaoCardapioForm({
     watch,
     reset,
     formState: { isSubmitting, errors },
-  } = useForm<secaoCardapioFormData>({
-    resolver: zodResolver(secaoCardapioFormSchema),
+  } = useForm<categoriaEstoqueFormData>({
+    resolver: zodResolver(categoriaEstoqueFormSchema),
   });
 
   const nomeValue = watch("nome");
@@ -102,7 +102,7 @@ export default function SecaoCardapioForm({
           outline
           onClick={(ev) => {
             ev.preventDefault();
-            navigate("/cardapio?category=secao")
+            navigate("/estoque?category=categoria")
           }}
         >
           <Label light className="w-full">
@@ -111,7 +111,7 @@ export default function SecaoCardapioForm({
         </Button>
         <Button color="blue" disabled={isSubmitting} className="px-4">
           <Label className="w-full">{
-            data ? "Salvar" : "Nova Seção"
+            data ? "Salvar" : "Nova Categoria"
           }</Label>
         </Button>
       </div>

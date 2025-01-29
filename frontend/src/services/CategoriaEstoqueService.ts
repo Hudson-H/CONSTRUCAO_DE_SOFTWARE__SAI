@@ -2,6 +2,9 @@ import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import ICategoriaEstoque from "../utils/interfaces/categoriaEstoque";
 
+let UUID = 0;
+type AddCateoriaRequest = Omit<ICategoriaEstoque, "id">;
+
 let categoriaEstoqueData: ICategoriaEstoque[] = [
   {
     id: "0",
@@ -45,8 +48,11 @@ const CategoriaEstoqueService = {
     }
   },
 
-  add: async (categoria: ICategoriaEstoque): Promise<ICategoriaEstoque> => {
-    categoriaEstoqueData.unshift(categoria);
+  add: async (categoria: AddCateoriaRequest): Promise<ICategoriaEstoque> => {
+    categoriaEstoqueData.unshift({
+      id: (UUID++).toString(),
+      ...categoria
+    });
     return categoriaEstoqueData[0];
 
     try {

@@ -15,6 +15,8 @@ import { NovoAdicionalCardapio } from './views/cardapio/adicional/novo/NovoAdici
 import { EditarAdicionalCardapio } from './views/cardapio/adicional/editar/EditarAdicionalCardapio';
 import { NovoItemEstoque } from './views/estoque/Item/novo/NovoItemEstoque';
 import { EditarItemEstoque } from './views/estoque/Item/editar/EditarItemEstoque';
+import { EditarCategoriaEstoque } from './views/estoque/cagtegoria/editar/EditarCategoriaEstoque';
+import { NovoCategoriaEstoque } from './views/estoque/cagtegoria/novo/NovoCategoriaEstoque';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -45,6 +47,11 @@ const router = createBrowserRouter(
           <Route path="novo" element={<NovoItemEstoque/>}></Route>
           <Route path=":id" element={<EditarItemEstoque/>}></Route>
         </Route>
+        <Route path="categoria">
+          <Route path="novo" element={<NovoCategoriaEstoque/>}></Route>
+          <Route path=":id" element={<EditarCategoriaEstoque/>}></Route>
+        </Route>
+
       </Route>
 
       <Route path="cardapio/item/novo"></Route>
