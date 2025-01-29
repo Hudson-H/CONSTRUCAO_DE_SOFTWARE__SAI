@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const db = require('../config/db');
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db'); 
 const crypto = require('crypto');
 
 const adicionarUsuario = (login, senha) => {
