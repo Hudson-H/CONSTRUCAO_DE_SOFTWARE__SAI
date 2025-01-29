@@ -15,8 +15,10 @@ import { NovoAdicionalCardapio } from './views/cardapio/adicional/novo/NovoAdici
 import { EditarAdicionalCardapio } from './views/cardapio/adicional/editar/EditarAdicionalCardapio';
 import { NovoItemEstoque } from './views/estoque/Item/novo/NovoItemEstoque';
 import { EditarItemEstoque } from './views/estoque/Item/editar/EditarItemEstoque';
-import { EditarCategoriaEstoque } from './views/estoque/cagtegoria/editar/EditarCategoriaEstoque';
-import { NovoCategoriaEstoque } from './views/estoque/cagtegoria/novo/NovoCategoriaEstoque';
+import { EditarCategoriaEstoque } from './views/estoque/categoria/editar/EditarCategoriaEstoque';
+import { NovoCategoriaEstoque } from './views/estoque/categoria/novo/NovoCategoriaEstoque';
+import { NovoLancamentoEstoque } from './views/estoque/lancamento/novo/NovoLancamentoEstoque';
+import { EditarLancamentoEstoque } from './views/estoque/lancamento/editar/EditarLancamentoEstoque';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -50,6 +52,10 @@ const router = createBrowserRouter(
         <Route path="categoria">
           <Route path="novo" element={<NovoCategoriaEstoque/>}></Route>
           <Route path=":id" element={<EditarCategoriaEstoque/>}></Route>
+        </Route>
+        <Route path="lancamento">
+          <Route path="novo" element={<NovoLancamentoEstoque/>}></Route>
+          <Route path=":id" element={<EditarLancamentoEstoque/>}></Route>
         </Route>
 
       </Route>

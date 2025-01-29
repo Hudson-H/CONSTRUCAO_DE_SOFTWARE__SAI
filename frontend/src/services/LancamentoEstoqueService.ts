@@ -2,31 +2,46 @@ import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import ILancamentoEstoque from "../utils/interfaces/lancamentoEstoque";
 
+let UUID = 0;
+type AddLancamentoEstoqueRequest = Omit<ILancamentoEstoque, "id">;
+
 let lancamentoEstoqueData: ILancamentoEstoque[] = [
   {
     id: "0",
-    item: "Item 1",
+    item: {
+      id: "0",
+      nome: "Item 1"
+    },
     quantidade: 10,
     dataCompra: new Date(),
     dataValidade: new Date(),
   },
   {
     id: "1",
-    item: "Item 1",
+    item: {
+      id: "0",
+      nome: "Item 1"
+    },
     quantidade: 10,
     dataCompra: new Date(),
     dataValidade: new Date(),
   },
   {
     id: "2",
-    item: "Item 2",
+    item: {
+      id: "1",
+      nome: "Item 2"
+    },
     quantidade: 20,
     dataCompra: new Date(),
     dataValidade: new Date(),
   },
   {
     id: "3",
-    item: "Item 3",
+    item: {
+      id: "2",
+      nome: "Item 3"
+    },
     quantidade: 30,
     dataCompra: new Date(),
     dataValidade: new Date(),
@@ -58,8 +73,11 @@ const LancamentoEstoqueService = {
     }
   },
 
-  add: async (lancamento: ILancamentoEstoque): Promise<ILancamentoEstoque> => {
-    lancamentoEstoqueData.unshift(lancamento);
+  add: async (lancamento: AddLancamentoEstoqueRequest): Promise<ILancamentoEstoque> => {
+    lancamentoEstoqueData.unshift({
+      id: (UUID++).toString(),
+      ...lancamento
+    });
     return lancamentoEstoqueData[0];
 
     try {

@@ -9,10 +9,11 @@ import { Label } from "../../atoms/Label/Label";
 import { FormField } from "../../molecules/FormField/FormField";
 import IAdionalCardapio from "../../../utils/interfaces/secaoCardapio";
 import ItemSearch from "../../molecules/ItemSearch/ItemSearch";
+import ILancamentoEstoque from "../../../utils/interfaces/lancamentoEstoque";
 
-export const adicionalCardapioFormSchema = z.object({
-  nome: z.string().min(1, "Nome é obrigatório"),
-  valor: z.number(),
+export const lancamentoEstoqueFormSchema = z.object({
+  dataCompra: z.date(),
+  dataValidade: z.date(),
   item: z.object({
     nome: z.string(),
     id: z.string(),
@@ -20,18 +21,18 @@ export const adicionalCardapioFormSchema = z.object({
   quantidade: z.number()
 });
 
-export type adicionalCardapioFormData = z.infer<typeof adicionalCardapioFormSchema>;
+export type lancamentoEstoqueFormData = z.infer<typeof lancamentoEstoqueFormSchema>;
 
-type AdicionalCardapioFormProps = {
-  data?: IAdionalCardapio;
+type LancamentoEstoqueFormProps = {
+  data?: ILancamentoEstoque;
 
-  onSubmit: (data: adicionalCardapioFormData) => void;
+  onSubmit: (data: lancamentoEstoqueFormData) => void;
 };
 
-export default function AdicionalCardapioForm({
+export default function LancamentoEstoqueForm({
   data,
   onSubmit
-}: AdicionalCardapioFormProps) {
+}: LancamentoEstoqueFormProps) {
   const navigate = useNavigate();
 
   const {
@@ -40,12 +41,12 @@ export default function AdicionalCardapioForm({
     watch,
     reset,
     formState: { isSubmitting, errors },
-  } = useForm<adicionalCardapioFormData>({
-    resolver: zodResolver(adicionalCardapioFormSchema),
+  } = useForm<lancamentoEstoqueFormData>({
+    resolver: zodResolver(lancamentoEstoqueFormSchema),
   });
 
-  const nomeValue = watch("nome");
-  const valorValue = watch("valor");
+  const dataCompraValue = watch("dataCompra");
+  const dataValidadeValue = watch("dataValidade");
   const itemValue = watch("item");
   const quantidadeValue = watch("quantidade")
 
@@ -69,53 +70,8 @@ export default function AdicionalCardapioForm({
     >
       <div className="grid grid-cols-12 gap-4">
         <FormField
-          haveError={!!errors.nome}
-          errorMessage={errors.nome?.message}
-          className="col-span-4"
-        >
-          <Label>Nome</Label>
-          <Input
-            type="text"
-            value={nomeValue ?? ""}
-            onChange={(ev) => setValue("nome", ev.target.value)}
-            placeholder="Insira o nome"
-            className="font-light"
-            borderless
-          ></Input>
-        </FormField>
-
-        <FormField
-          haveError={!!errors.valor}
-          errorMessage={errors.valor?.message}
-          className="col-span-2"
-        >
-          <Label>Valor</Label>
-          <Input
-            type="currency"
-            value={valorValue}
-            onChange={(ev) => {
-              let value = ev.target.value;
-              if (value === undefined) {
-                // FIXME: This is a bug
-                setValue("valor", 0);
-                return;
-              }
-              value = value
-                .replaceAll(".", "")
-                .replace(",", ".");
-              setValue("valor", isNaN(+value) ? 0: +value);
-            }}
-            placeholder="Insira o valor"
-            className="font-light"
-            borderless
-          ></Input>
-        </FormField>
-      </div>
-
-      <div className="grid grid-cols-12 gap-4">
-        <FormField
-          haveError={!!errors.valor}
-          errorMessage={errors.valor?.message}
+          haveError={!!errors.item}
+          errorMessage={errors.item?.message}
           className="col-span-4"
         >
           <Label>Item</Label>
@@ -130,9 +86,10 @@ export default function AdicionalCardapioForm({
             }
           }></ItemSearch>
         </FormField>
+
         <FormField
-          haveError={!!errors.valor}
-          errorMessage={errors.valor?.message}
+          haveError={!!errors.quantidade}
+          errorMessage={errors.quantidade?.message}
           className="col-span-2"
         >
           <Label>Quantidade</Label>
@@ -140,11 +97,45 @@ export default function AdicionalCardapioForm({
             type="number"
             value={quantidadeValue ?? ""}
             onChange={(ev) => setValue("quantidade", +ev.target.value)}
-            placeholder="Insira o quantidade"
+            placeholder="Insira a quantidade"
             className="font-light"
             borderless
           ></Input>
         </FormField>
+      </div>
+
+      <div className="grid grid-cols-12 gap-4">
+        <FormField
+          haveError={!!errors.quantidade}
+          errorMessage={errors.quantidade?.message}
+          className="col-span-2"
+        >
+          <Label>Data de Vencimento</Label>
+          <Input
+            type="date"
+            value={quantidadeValue ?? ""}
+            onChange={(ev) => setValue("quantidade", +ev.target.value)}
+            placeholder="Insira a data de compra"
+            className="font-light"
+            borderless
+          ></Input>
+        </FormField>
+        <FormField
+          haveError={!!errors.quantidade}
+          errorMessage={errors.quantidade?.message}
+          className="col-span-2"
+        >
+          <Label>Data de Compra</Label>
+          <Input
+            type="date"
+            value={quantidadeValue ?? ""}
+            onChange={(ev) => setValue("quantidade", +ev.target.value)}
+            placeholder="Insira a data de validade"
+            className="font-light"
+            borderless
+          ></Input>
+        </FormField>
+
       </div>
 
       <div className="flex justify-end items-center w-full mt-2 gap-2 col-span-12">

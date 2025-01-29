@@ -3,5 +3,8 @@ export default interface ILancamentoEstoque {
   quantidade: number;
   dataCompra: Date;
   dataValidade?: Date;
-  item: string;
+  item: {
+    id: string,
+    nome: string
+  };
 }
