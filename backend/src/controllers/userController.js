@@ -1,10 +1,10 @@
 const userService = require('../services/userService');
 
 const adicionarUsuario = async (req, res) => {
-  const { Login, Senha } = req.body;
+  const { login, senha } = req.body;
 
   try {
-    const result = await userService.adicionarUsuario(Login, Senha);
+    const result = await userService.adicionarUsuario(login, senha);
     res.status(201).json({ message: 'Usuário adicionado com sucesso.', userId: result.insertId });
   } catch (err) {
     console.error(err);
@@ -57,11 +57,12 @@ const deletarUsuario = async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
+
     await userService.deletarUsuario(userId);
 
     res.status(200).json({ message: 'Usuário deletado com sucesso.' });
   } catch (err) {
-    console.error('Erro ao deletar usuário:', err.message);
+    console.error('Erro ao deletar usuário:', err);
     res.status(500).json({ error: 'Erro interno ao deletar usuário.' });
   }
 };
@@ -69,7 +70,7 @@ const deletarUsuario = async (req, res) => {
 const atualizarUsuario = async (req, res) => {
   try {
     const userId = req.params.id;
-    const { nome, email } = req.body;
+    const { Login, Senha } = req.body;
 
     if (!userId || isNaN(userId)) {
       return res.status(400).json({ error: 'ID inválido fornecido.' });
@@ -81,7 +82,7 @@ const atualizarUsuario = async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
-    await userService.atualizarUsuario(userId, nome, email);
+    await userService.atualizarUsuario(userId, Login, Senha);
 
     res.status(200).json({ message: 'Usuário atualizado com sucesso.' });
   } catch (err) {
@@ -90,4 +91,17 @@ const atualizarUsuario = async (req, res) => {
   }
 }
 
-module.exports = { adicionarUsuario, listarUsuarios, listarUsuarioPorId, deletarUsuario, atualizarUsuario };
+const loginUsuario = async (req, res) => {
+  const { login, senha } = req.body;
+
+  try {
+    const user = await userService.loginUsuario(req, login, senha);
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ error: 'Erro ao validar usuário.' });
+  }
+};
+
+module.exports = { adicionarUsuario, listarUsuarios, listarUsuarioPorId, deletarUsuario, atualizarUsuario, loginUsuario };
+
