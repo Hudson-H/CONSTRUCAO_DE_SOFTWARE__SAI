@@ -1,4 +1,4 @@
-const db = require('../config/db');  // Conexão com o banco de dados
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db'); 
 
 const listarEstoque = ({ idItem } = {}) => {
   console.log("idItem recebido:", idItem);
@@ -242,6 +242,8 @@ const atualizarEstoque = (ID, dados) => {
         const campos = [];
         const valores = [];
 
+        ID = Number(ID);
+
         Object.keys(dados).forEach((campo) => {
         campos.push(`${campo} = ?`);
         valores.push(dados[campo]);
@@ -250,11 +252,13 @@ const atualizarEstoque = (ID, dados) => {
         valores.push(ID);
 
         const query = `UPDATE estoque SET ${campos.join(', ')} WHERE ID = ?`;
+        console.log("Query " + query);
+        console.log("Valores: ", valores);
         db.query(query, valores, (err, results) => {
-        if (err) {
-          return reject('Erro ao atualizar Estoque: ' + err);
-        }
-        resolve(results);
+          if (err) {
+            return reject('Erro ao atualizar Estoque: ' + err);
+          }
+          resolve(results);
         });
     });
 };

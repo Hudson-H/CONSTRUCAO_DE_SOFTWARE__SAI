@@ -112,10 +112,10 @@ exports.up = function(knex) {
         .then(() => {
             return knex.schema.createTable('Adicionar', (table) => {
                 table.integer('ID_Item_Pedido').unsigned().notNullable();
-                table.integer('ID_Item_Cardapio').unsigned().notNullable();
+                table.integer('ID_Item_Cardapio').unsigned();
                 table.integer('ID_Adicional').unsigned();
                 table.integer('Quantidade_Adicional');
-                table.primary(['ID_Item_Pedido', 'ID_Item_Cardapio']);
+                table.primary(['ID_Item_Pedido']);
             });
         })
         .then(() => {

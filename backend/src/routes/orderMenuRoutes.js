@@ -5,6 +5,11 @@ const router = express.Router();
 
 router.patch('/cardapio/teste/:id', orderMenuController.atualizarEstoqueAposPedido);
 
+router.get('/cardapio/adicionar/:id', orderMenuController.buscarAdicionarPorID);
+router.patch('/cardapio/adicionar/:id', orderMenuController.atualizarAdicionar);
+router.post('/cardapio/adicionar', orderMenuController.adicionarAdicionar);
+router.delete('/cardapio/adicionar/:id', orderMenuController.deletarAdicionar);
+
 router.get('/cardapio/composicao', orderMenuController.listarComposicao);
 router.get('/cardapio/adicionados', orderMenuController.listarAdicionados);
 router.get('/cardapio/item', orderMenuController.listarItensCardapio);

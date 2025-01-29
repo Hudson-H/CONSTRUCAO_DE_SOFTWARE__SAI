@@ -1,5 +1,5 @@
 const orderMenuService = require('../services/orderMenuService');
-const db = require('../config/db');  // Conexão com o banco de dados
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db');  // Conexão com o banco de dados
 
 
 const listarComposicao = async (req, res) => {
@@ -86,6 +86,28 @@ const buscarItemCardapioPorID = async (req, res) => {
   }
 };
 
+const buscarAdicionarPorID = async (req, res) => {
+  const ID = req.params.id;
+  try {
+    const adicionar = await orderMenuService.buscarAdicionarPorID(ID);
+    res.json(adicionar);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao buscar Adicionar.' });
+  }
+};
+
+const adicionarAdicionar = async (req, res) => {
+  const dados = req.body;
+
+  try {
+    const result = await orderMenuService.adicionarAdicionar(dados);
+    res.status(201).json({ message: 'Adicional do Cardapio adicionado ao pedido com sucesso.', adicionarID: result.insertId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao adicionar Adicional no pedido.'});
+  }
+};
 
 
 const adicionarItemCardapio = async (req, res) => {
@@ -115,14 +137,6 @@ const adicionarItemCardapio = async (req, res) => {
         return res.status(404).json({ error: 'Item Cardapio não encontrado.' });
       }
 
-      const adicionados = await orderMenuService.listarAdicionados({idItemCardapio: itemMenuId})
-      
-      if (adicionados.length > 0) {
-        return res.status(400).json({
-            error: 'Não é possível deletar o item do cardapio, pois ele está conectado a adicionais e ItemPedido',
-        });
-      }
-  
       const composicao = await orderMenuService.listarComposicao({idItemCardapio: itemMenuId})
       
       if (composicao.length > 0) {
@@ -131,6 +145,16 @@ const adicionarItemCardapio = async (req, res) => {
         //     error: 'Não é possível deletar o item do cardapio, pois ele está conectado a outros itens',
         // });
       }
+
+      const adicionados = await orderMenuService.listarAdicionados({idItemCardapio: itemMenuId})
+      
+      if (adicionados.length > 0) {
+        await orderMenuService.removerItemCardapioAdicionar(itemMenuId);
+        // return res.status(400).json({
+        //     error: 'Não é possível deletar o item do cardapio, pois ele está conectado a adicionais e ItemPedido',
+        // });
+      }
+  
 
       await orderMenuService.deletarItemCardapio(itemMenuId);
   
@@ -208,6 +232,29 @@ const adicionarAdicionalCardapio = async (req, res) => {
     }
 };
 
+const atualizarAdicionar= async (req, res) => {
+  const ID = req.params.id;
+  const dados = req.body;
+
+  
+  try {
+    if (!ID || isNaN(ID)) {
+      return res.status(400).json({ error: 'ID inválido fornecido.' });
+    }
+    const adicionar = await orderMenuService.buscarAdicionarPorID(ID);
+    if (!adicionar) {
+      return res.status(404).json({ error: 'Item do Cardapio não encontrado.' });
+    }
+    const result = await orderMenuService.atualizarAdicionar(ID, dados);
+    res.status(201).json({ message: 'Item do Cardapio atualizado com sucesso.'});
+  } 
+  catch (err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao atualizar adicional no pedido.' });
+  }
+};
+
 const atualizarItemCardapio = async (req, res) => {
   const ID = req.params.id;
   const dados = req.body;
@@ -230,7 +277,7 @@ const atualizarItemCardapio = async (req, res) => {
     res.status(500).json({ error: 'Erro ao atualizar ItemCardapio.' });
   }
 };
-
+/*
 const atualizarEstoqueAposPedido = async (req, res) => {
   const ID = req.params.id;
   console.log("Id = " + ID);
@@ -246,9 +293,17 @@ const atualizarEstoqueAposPedido = async (req, res) => {
         return res.status(500).json({ error: 'Erro ao iniciar a transação.' });
       }
 
-      try {
-        const { idItemsCardapio, adicionais } = await orderMenuService.atualizarEstoqueAposPedido(ID);
+      const result = await orderMenuService.atualizarEstoqueAposPedido(ID);
 
+      if (!result || !result.idItemsCardapio) {
+        return db.rollback(() => {
+          res.status(500).json({ error: 'Erro ao obter os itens do cardápio.' });
+        });
+      }
+
+      const { idItemsCardapio, adicionais } = result;
+
+      try {
         for (const adicional of adicionais) {
           const { idItem, quantidade } = adicional;
 
@@ -256,9 +311,7 @@ const atualizarEstoqueAposPedido = async (req, res) => {
           const lotes = await orderMenuService.buscarEstoquePorItem(idItem);
           console.log("Lotes = ", lotes);
           if (!lotes || lotes.length === 0) {
-            db.rollback(() => {
-              res.status(500).json({ error: 'Erro ao atualizar Estoque no lote de item ' +idItem});
-            });
+            return res.status(404).json({ error: `Estoque não encontrado para o item ${idItem}.` });
             // return db.rollback(() => {
             //   return res.status(404).json({ error: `Estoque não encontrado para o item ${idItem}.` });
             // });
@@ -267,6 +320,15 @@ const atualizarEstoqueAposPedido = async (req, res) => {
           // Passa tanto os lotes quanto a quantidade para a função que vai atualizar o estoque
           await orderMenuService.atualizarAdicionaisAposPedido(lotes, quantidade);
         }
+
+      } catch (err) {
+        console.error(err);
+        db.rollback(() => {
+          res.status(500).json({ error: 'Erro ao atualizar Estoque Após Pedido.' });
+        });
+      }
+      console.log("Bala");
+      try{
 
         for (const itemCardapio of idItemsCardapio) {
           console.log("Itens cardapio: " + itemCardapio);
@@ -285,14 +347,20 @@ const atualizarEstoqueAposPedido = async (req, res) => {
             console.log("Lotes = ", lotes);
 
             if (!lotes || lotes.length === 0) {
-              db.rollback(() => {
-                res.status(500).json({ error: 'Erro ao atualizar Estoque no lote de item ' +idItem});
-              });
+              console.log("Antes erro");
+               return res.status(404).json({ error: `Estoque não encontrado para o item ${idItem}.` });
             }
+            console.log("Continuando");
 
             await orderMenuService.atualizarAdicionaisAposPedido(lotes, quantidade); //nome da função ta para adicionais, mas ta errado é pra ser generico
           }
         }
+      } catch (err) {
+        console.error(err);
+        db.rollback(() => {
+          res.status(500).json({ error: 'Erro ao atualizar Estoque Após Pedido.' });
+        });
+      }
 
         db.commit((err) => {
           if (err) {
@@ -304,19 +372,88 @@ const atualizarEstoqueAposPedido = async (req, res) => {
           res.status(201).json({ message: 'Estoque POS atualizado com sucesso.' });
         });
 
-      } catch (err) {
-        console.error(err);
-        db.rollback(() => {
-          // res.status(500).json({ error: 'Erro ao atualizar Estoque Após Pedido.' });
-        });
-      }
+      
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao processar a requisição.' });
+    if (!res.headersSent) {
+      return db.rollback(() => {
+        res.status(400).json({ error: err.message });
+      });    }
+    
   }
 };
+*/
 
+
+const atualizarEstoqueAposPedido = async (req, res) => {
+  const ID = req.params.id;
+  console.log("Id = " + ID);
+
+  try {
+    if (!ID || isNaN(ID)) {
+      return res.status(400).json({ error: 'ID inválido fornecido.' });
+    }
+
+    // Inicia a transação
+    await beginTransaction();  // Espera pela transação começar
+
+    const result = await orderMenuService.atualizarEstoqueAposPedido(ID);
+    if (!result || !result.idItemsCardapio) {
+      await rollbackTransaction();  // Se der erro, faz rollback
+      return res.status(500).json({ error: 'Erro ao obter os itens do cardápio.' });
+    }
+
+    const { idItemsCardapio, adicionais } = result;
+
+    // Processar adicionais
+    for (const adicional of adicionais) {
+      const { idItem, quantidade } = adicional;
+      const lotes = await orderMenuService.buscarEstoquePorItem(idItem);
+      console.log("Lotes = ", lotes);
+
+      if (!lotes || lotes.length === 0) {
+        await rollbackTransaction();  // Rollback em caso de erro
+        return res.status(404).json({ error: `Estoque não encontrado para o item ${idItem}.` });
+      }
+
+      await orderMenuService.atualizarAdicionaisAposPedido(lotes, quantidade);
+    }
+
+    // Processar itens do cardápio
+    for (const itemCardapio of idItemsCardapio) {
+      console.log("Itens cardapio: " + itemCardapio);
+      const itensComposicao = await orderMenuService.listarComposicao({ idItemCardapio: itemCardapio });
+
+      if (!itensComposicao || itensComposicao.length === 0) {
+        console.log(`Itens para o ItemCardápio ${itemCardapio.ID_Item_Cardapio} não encontrados.`);
+        continue;
+      }
+
+      for (const { ID_Item: idItem, Quantidade_Composicao: quantidade } of itensComposicao) {
+        const lotes = await orderMenuService.buscarEstoquePorItem(idItem);
+        console.log("Lotes = ", lotes);
+
+        if (!lotes || lotes.length === 0) {
+          console.log("Antes erro");
+          await rollbackTransaction();  // Rollback em caso de erro
+          return res.status(404).json({ error: `Estoque não encontrado para o item ${idItem}.` });
+        }
+
+        await orderMenuService.atualizarAdicionaisAposPedido(lotes, quantidade);
+      }
+    }
+
+    // Commit da transação se tudo ocorrer bem
+    await commitTransaction();  // Faz commit na transação
+    res.status(201).json({ message: 'Estoque POS atualizado com sucesso.' });
+
+  } catch (err) {
+    console.error(err);
+    await rollbackTransaction();  // Rollback em caso de erro geral
+    res.status(500).json({ error: 'Erro ao atualizar Estoque Após Pedido.' });
+  }
+};
 
 const deletarSecaoCardapio = async (req, res) => {
     try {
@@ -381,4 +518,28 @@ const deletarSecaoCardapio = async (req, res) => {
     }
   };
 
-module.exports = {listarComposicao, listarAdicionados, listarItensCardapio, buscarItemCardapioPorID, adicionarItemCardapio, deletarItemCardapio, listarSecoesCardapio, buscarSecaoCardapioPorID, adicionarSecaoCardapio, deletarSecaoCardapio,listarAdicionaisCardapio, buscarAdicionalCardapioPorID, adicionarAdicionalCardapio, atualizarEstoqueAposPedido,  atualizarItemCardapio, deletarAdicionalCardapio};
+  const deletarAdicionar = async (req, res) => {
+    try {
+      const item_pedido_id = req.params.id;
+  
+      if (!item_pedido_id || isNaN(item_pedido_id)) {
+        return res.status(400).json({ error: 'ID inválido fornecido.' });
+      }
+  
+      const adicionar = await orderMenuService.buscarAdicionarPorID(item_pedido_id);
+  
+      if (!adicionar) {
+        return res.status(404).json({ error: 'Item Cardapio não encontrado.' });
+      }
+  
+      await orderMenuService.deletarAdicionar(item_pedido_id);
+  
+      res.status(200).json({ message: 'Adicional do pedido deletado com sucesso.' });
+    } catch (err) {
+      console.error('Erro ao deletar Adicional do pedido:', err.message);
+      res.status(500).json({ error: 'Erro interno ao deletar Adicionar.' });
+    }
+  };
+
+
+module.exports = {listarComposicao, listarAdicionados, listarItensCardapio, buscarItemCardapioPorID, adicionarAdicionar, buscarAdicionarPorID, adicionarItemCardapio, deletarItemCardapio, listarSecoesCardapio, buscarSecaoCardapioPorID, adicionarSecaoCardapio, deletarSecaoCardapio,listarAdicionaisCardapio, buscarAdicionalCardapioPorID, adicionarAdicionalCardapio, atualizarEstoqueAposPedido, atualizarAdicionar,  atualizarItemCardapio, deletarAdicionalCardapio, deletarAdicionar};

@@ -1,6 +1,6 @@
-const db = require('../config/db');  // Conexão com o banco de dados
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db'); 
 
-const listarComposicao = ({ idItemCardapio, idItem } = {}) => {
+const listarComposicao = async ({ idItemCardapio, idItem } = {}) => {
     console.log("idItem recebido:", idItem);
     return new Promise((resolve, reject) => {
       // Define a query com ou sem filtro
@@ -29,7 +29,7 @@ const listarComposicao = ({ idItemCardapio, idItem } = {}) => {
     });
   };
   //nao foi testado ainda
-  const listarAdicionados = ({ idItemPedido, idItemCardapio, idAdicional } = {}) => {
+  const listarAdicionados = async ({ idItemPedido, idItemCardapio, idAdicional } = {}) => {
     // console.log("idItem recebido:", idItem);
     return new Promise((resolve, reject) => {
       // Define a query com ou sem filtro
@@ -103,7 +103,53 @@ const buscarItemCardapioPorID = (ID) => {
       });
     });
   };
+
+  const buscarAdicionarPorID = (ID) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM Adicionar WHERE ID_Item_Pedido = ?`;
+    //   console.log("Buscar ItemCardapio, id = " + ID);
+      db.query(query, [ID], (err, results) => {
+        if (err) {
+          return reject('Erro ao buscar Adicionar: ' + err);
+        }
+        resolve(results);
+      });
+    });
+  };
+
+
+  const adicionarAdicionar = (dados) => {
+    return new Promise((resolve, reject) => {
+      const campos = [];
+      const valores = [];
+      const placeholders = [];
+      
+      Object.keys(dados).forEach((campo) => {
+        campos.push(campo);
   
+        if (dados[campo] == null) {
+          valores.push(null);
+        } else {
+          valores.push(dados[campo]);
+        }
+        
+        placeholders.push('?');
+      });
+  
+      const query = 
+        `INSERT INTO Adicionar 
+        (${campos.join(', ')})
+        VALUES (${placeholders.join(', ')})`;
+  
+      db.query(query, valores, (err, result) => {
+        if (err) {
+          return reject('Erro ao adicionar Adicional no Pedido: ' + err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+};
 
 const adicionarItemCardapio = (dados) => {
     return new Promise((resolve, reject) => {
@@ -285,6 +331,28 @@ const adicionarAdicionalCardapio = (dados) => {
     });
 };
 
+const atualizarAdicionar = (ID, dados) => {
+  return new Promise((resolve, reject) => {
+      const campos = [];
+      const valores = [];
+
+      Object.keys(dados).forEach((campo) => {
+      campos.push(`${campo} = ?`);
+      valores.push(dados[campo]);
+      });
+
+      valores.push(ID);
+
+      const query = `UPDATE Adicionar SET ${campos.join(', ')} WHERE ID_Item_Pedido = ?`;
+      db.query(query, valores, (err, results) => {
+      if (err) {
+        return reject('Erro ao atualizar adicional no pedido: ' + err);
+      }
+      resolve(results);
+      });
+  });
+};
+
 const atualizarItemCardapio = (ID, dados) => {
     return new Promise((resolve, reject) => {
         const campos = [];
@@ -320,9 +388,36 @@ const deletarAdicionalCardapio = (id) => {
   });
 }
 
+const deletarAdicionar= (id) => {
+  // console.log("Id do Adicional cardapio = " + id);
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM Adicionar WHERE ID_Item_Pedido = ?';
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        return reject('Erro ao deletar Adicional do pedido: ' + err);
+      }
+      resolve(results);
+    });
+  });
+}
+
 const removerComposicaoPorItemCardapio = (idItemCardapio) => {
   return new Promise((resolve, reject) => {
     const query = 'DELETE FROM CompostoPor WHERE ID_Item_Cardapio = ?';
+    const params = [idItemCardapio];
+
+    db.query(query, params, (err, results) => {
+      if (err) {
+        return reject('Erro ao remover composição: ' + err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+const removerItemCardapioAdicionar = (idItemCardapio) => {
+  return new Promise((resolve, reject) => {
+    const query = 'UPDATE Adicionar SET ID_Item_Cardapio = NULL WHERE ID_Item_Cardapio = ?';
     const params = [idItemCardapio];
 
     db.query(query, params, (err, results) => {
@@ -360,7 +455,7 @@ const atualizarAdicionaisAposPedido = async (lotes, quantidade) => {
 
         if(quantidadeDisponivel < quantidadeRestante && isLastLote ){
           console.log("Não há estoque suficiente para completar o pedido no último lote.");
-          return res.status(400).json({ error: "Estoque insuficiente para completar o pedido." });
+          return reject(new Error("Estoque insuficiente para completar o pedido."));
         }
       
 
@@ -402,7 +497,7 @@ const atualizarAdicionaisAposPedido = async (lotes, quantidade) => {
   });
 };
 
-const buscarEstoquePorItem = (idItem) => {
+const buscarEstoquePorItem = async (idItem) => {
   return new Promise((resolve, reject) => {
     const query = `
       SELECT ID, Quantidade 
@@ -545,4 +640,4 @@ const atualizarEstoqueAposPedido = async (idPedido) => {
 
 
 
-module.exports = {atualizarEstoqueAposPedido, buscarEstoquePorItem, atualizarAdicionaisAposPedido, listarComposicao, listarAdicionados, listarItensCardapio, buscarItemCardapioPorID, adicionarItemCardapio, deletarItemCardapio,listarSecoesCardapio, buscarSecaoCardapioPorID, adicionarSecaoCardapio, deletarSecaoCardapio,listarAdicionaisCardapio, buscarAdicionalCardapioPorID, adicionarAdicionalCardapio, atualizarItemCardapio, deletarAdicionalCardapio, removerComposicaoPorItemCardapio};
+module.exports = {atualizarEstoqueAposPedido, buscarEstoquePorItem, atualizarAdicionaisAposPedido,removerItemCardapioAdicionar, listarComposicao, listarAdicionados, adicionarAdicionar, listarItensCardapio, buscarItemCardapioPorID, buscarAdicionarPorID, adicionarItemCardapio, deletarItemCardapio,listarSecoesCardapio, buscarSecaoCardapioPorID, adicionarSecaoCardapio, deletarSecaoCardapio,listarAdicionaisCardapio, buscarAdicionalCardapioPorID, adicionarAdicionalCardapio,atualizarAdicionar, atualizarItemCardapio, deletarAdicionalCardapio, removerComposicaoPorItemCardapio, deletarAdicionar};
