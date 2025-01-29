@@ -15,6 +15,7 @@ exports.seed = async function(knex) {
   await knex('SecaoCardapio').del()
   await knex('Pedido').del();
   await knex('Funcionario').del();
+  await knex('user_session').del();
   await knex('Usuario').del();
   await knex('Item').del();
   await knex('Categoria').del();
@@ -22,8 +23,8 @@ exports.seed = async function(knex) {
  
   // Inserindo dados
   await knex('Usuario').insert([
-    { Login: 'Repicolas', Senha: 100 },
-    { Login: 'Pesudsson', Senha: 123 }
+    { Login: 'Repicolas', Senha: "100" },
+    { Login: 'Pesudsson', Senha: "123" }
   ]);
 
   await knex('Funcionario').insert([

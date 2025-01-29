@@ -1,5 +1,6 @@
 const pedidoService = require('../services/pedidoService');
-const db = require('../config/db')
+const orderMenuService = require('../services/orderMenuService');
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db'); 
 
 const adicionarPedido = async (req, res) => {
   const { idAtendente, Senha, Data_Pedido, Informacoes, ID_Pagamento, Data_Emissao_Pagamento } = req.body;
@@ -144,6 +145,40 @@ const deletarItemPedido= async (req, res) => {
       res.status(500).json({ error: 'Erro ao adicionar ItemPedido no pedido.'});
     }
   };
+
+
+  const novoPedido = async (req, res) => {
+    const ID_Pedido = req.params.id_pedido;
+    const ID_Item_Cardapio = req.params.id_ic;
+  
+    try {
+      // const pedido_id = ID_Pedido;
+
+      if (!ID_Pedido || isNaN(ID_Pedido)) {
+        return res.status(400).json({ error: 'ID inválido fornecido.' });
+      }
+  
+      const pedido = await pedidoService.listarPedidoPorId(ID_Pedido);
+  
+      if (!pedido) {
+        return res.status(404).json({ error: 'Pedido não encontrado.' });
+      }
+      const dados = {ID_Pedido};
+      console.log("id pedido: " + ID_Pedido);
+      const {itemPedidoID} = await pedidoService.adicionarItemPedido(dados);
+      // console.log("Resposta da função adicionarItemPedido:", response);
+      console.log(itemPedidoID );
+
+      const adicionar = await orderMenuService.adicionarAdicionar({ID_Item_Pedido: itemPedidoID, ID_Item_Cardapio: ID_Item_Cardapio});
+
+
+      res.status(201).json({ message: 'Pedido adicionado ao pedido com sucesso.' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao adicionar Pedido no pedido.'});
+    }
+  };
+  
   
 
-module.exports = { adicionarPedido, listarPedidos, listarPedidoPorId, atualizarPedido, deletarPedido, buscarItemPedidoPorID, atualizarItemPedido, deletarItemPedido, adicionarItemPedido};
+module.exports = { adicionarPedido, listarPedidos, listarPedidoPorId, atualizarPedido, deletarPedido, buscarItemPedidoPorID, atualizarItemPedido, deletarItemPedido, adicionarItemPedido, novoPedido};

@@ -85,7 +85,14 @@ exports.up = function(knex) {
             return knex.schema.createTable('Usuario', (table) => {
                 table.increments('ID').primary();
                 table.string('Login', 30);
-                table.integer('Senha');
+                table.string('Senha',255);
+            });
+        })
+        .then(() => {
+            return knex.schema.createTable('user_session', (table) => {
+                table.string('token',255).primary();
+                table.integer('user_id');
+                table.timestamp('expiration_time');
             });
         })
         .then(() => {
@@ -182,6 +189,7 @@ exports.up = function(knex) {
         .dropTableIfExists('SecaoCardapio')
         .dropTableIfExists('Pedido')
         .dropTableIfExists('Funcionario')
+        .dropTableIfExists('user_session')
         .dropTableIfExists('Usuario')
         .dropTableIfExists('Item')
         .dropTableIfExists('Categoria');

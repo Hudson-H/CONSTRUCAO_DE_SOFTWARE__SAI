@@ -1,6 +1,5 @@
 // src/middlewares/authMiddleware.js
-
-const db = require('../config/db');
+const { db, beginTransaction, commitTransaction, rollbackTransaction } = require('../config/db');
 
 const autenticarUsuario = (req, res, next) => {
   try {
