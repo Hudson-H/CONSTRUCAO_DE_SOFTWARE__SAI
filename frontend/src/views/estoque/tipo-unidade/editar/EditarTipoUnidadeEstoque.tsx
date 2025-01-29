@@ -42,7 +42,7 @@ export function EditarTipoUnidadeEstoque() {
         sigla,
       });
 
-      toast.info("Seção salva com sucesso!");
+      toast.info("TIpo Unidade salvo com sucesso!");
       navigate(`/estoque?category=tipoUnidade`);
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);

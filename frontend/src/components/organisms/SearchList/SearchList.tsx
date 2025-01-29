@@ -17,6 +17,11 @@ type SearchListProps = {
   items: SearchListRow[];
   searchData: {key: string, name: string}[];
 
+  enablePrice?: boolean;
+  enableAdditionals?: boolean;
+  enableAmount?: boolean;
+  doNotStackItens?: boolean;
+
   onSearchChange: (search: string) => void;
   onChange: (value: SearchListRow[]) => void;
 };
@@ -26,16 +31,21 @@ export default function SearchList({
   items,
   searchData,
 
+  enablePrice,
+  enableAdditionals,
+  enableAmount,
+  doNotStackItens,
+
   onSearchChange,
   onChange,
 }: SearchListProps) {
   const [itemSearch, setItemSearch] = useState<string>("");
 
-  async function addItem(value: {name: string, key: string}) {
+  async function addItem(value: {name: string, key: string, price?: number}) {
     if (!value) return;
     const item = items.find(val => val.key === value.key);
 
-    if (item && item.amount !== undefined) {
+    if (item && item.amount !== undefined && !doNotStackItens) {
       item.amount += 1;
       onChange([...items]);
       return;
@@ -44,7 +54,7 @@ export default function SearchList({
     onChange([...items, {
       key: value.key,
       name: value.name,
-      price: 0,
+      price: value.price??0,
       amount: 1,
     }]);
   }
@@ -70,16 +80,27 @@ export default function SearchList({
       items.map((item, index) => {
         return <div key={index} className="w-full flex flex-row justify-between items-center py-4 gap-4">
           <Label light className="grow">{item.name}</Label>
-          {item.price ? <Label>R$ {item.price.toFixed(2)}</Label> : null}
-          <div className="inline-flex items-center gap-2">
-            <CaretLeft className="cursor-pointer" onClick={(ev) => {
-              changeQuantity(item, "remove");
-            }}/>
-            {item.amount}
-            <CaretRight className="cursor-pointer" onClick={(ev) => {
-              changeQuantity(item, "add");
-            }}/>
-          </div>
+          {enablePrice && item.price !== undefined ? <Label>R$ {item.price.toFixed(2)}</Label> : null}
+          {enableAdditionals ?
+            <div className="flex gap-4" >
+              Ver Adicionais
+              <div className="w-6 aspect-square py-0.5 bg-black/15 rounded-3xl justify-center items-center inline-flex overflow-hidden">
+                {item.additionals?.length??0}
+              </div>
+            </div>
+             : null
+          }
+          {enableAmount ?
+            <div className="inline-flex items-center gap-2">
+              <CaretLeft className="cursor-pointer" onClick={(ev) => {
+                changeQuantity(item, "remove");
+              }}/>
+              {item.amount}
+              <CaretRight className="cursor-pointer" onClick={(ev) => {
+                changeQuantity(item, "add");
+              }}/>
+            </div> : null
+          }
         </div>
       })
       :

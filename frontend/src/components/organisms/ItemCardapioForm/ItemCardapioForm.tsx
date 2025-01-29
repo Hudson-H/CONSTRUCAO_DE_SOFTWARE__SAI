@@ -146,6 +146,7 @@ export default function ItemCardapioForm({
       <div id="right" className="col-span-6 row-span-1">
         <Label>Composto por:</Label>
         <SearchList
+          enableAmount
           items={itemData}
           searchData={searchData}
           searchValue={itemSearch}

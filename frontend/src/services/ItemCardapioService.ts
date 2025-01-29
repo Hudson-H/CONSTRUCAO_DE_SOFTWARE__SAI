@@ -88,6 +88,18 @@ const ItemCardapioService = {
     } catch (err) {
       throw handleApiAxiosError(err, "Ocorreu um erro ao tentar deletar o item do cardápio");
     }
+  },
+
+  search: async (search: string): Promise<IItemCardapio[]> => {
+    return itemCardapioData.filter(item => item.nome.toLowerCase().includes(search.toLowerCase()));
+
+    try {
+      const response = await api.get(`/estoque/item/search?search=${search}`);
+
+      return response.data;
+    } catch (err) {
+      throw handleApiAxiosError(err, "Ocorreu um erro ao tentar buscar o item de estoque");
+    }
   }
 }
 
