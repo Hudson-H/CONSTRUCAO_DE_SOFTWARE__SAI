@@ -1,6 +1,10 @@
 import { api } from "../lib/axios";
+import ESTRATEGIA_CONTROLE from "../utils/enum/estrategiaControle";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import IItemEstoque from "../utils/interfaces/itemEstoque";
+
+let UUID = 0;
+type AddItemEstoqueRequest = Omit<IItemEstoque, "id">;
 
 let itemEstoqueData: IItemEstoque[] = [
   {
@@ -8,10 +12,10 @@ let itemEstoqueData: IItemEstoque[] = [
     categoria: "Categoria 1",
     descricao: "Descrição do item 1",
     nome: "Item 1",
+    estrategiaControle: ESTRATEGIA_CONTROLE[0],
     tipoUnidade: {
       id: "0",
       nome: "Un",
-      sigla: "Un"
     }
   },
   {
@@ -19,10 +23,10 @@ let itemEstoqueData: IItemEstoque[] = [
     categoria: "Categoria 2",
     descricao: "Descrição do item 2",
     nome: "Item 2",
+    estrategiaControle: ESTRATEGIA_CONTROLE[0],
     tipoUnidade: {
       id: "0",
       nome: "Un",
-      sigla: "Un"
     }
   },
   {
@@ -30,10 +34,10 @@ let itemEstoqueData: IItemEstoque[] = [
     categoria: "Categoria 3",
     descricao: "Descrição do item 3",
     nome: "Item 3",
+    estrategiaControle: ESTRATEGIA_CONTROLE[0],
     tipoUnidade: {
       id: "0",
       nome: "Un",
-      sigla: "Un"
     }
   }
 ];
@@ -63,8 +67,11 @@ const ItemEstoqueService = {
     }
   },
 
-  add: async (item: IItemEstoque): Promise<IItemEstoque> => {
-    itemEstoqueData.unshift(item);
+  add: async (item: AddItemEstoqueRequest): Promise<IItemEstoque> => {
+    itemEstoqueData.unshift({
+      id: (UUID++).toString(),
+      ...item
+    });
     return itemEstoqueData[0];
 
     try {

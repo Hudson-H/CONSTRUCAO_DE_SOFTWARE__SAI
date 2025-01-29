@@ -125,8 +125,8 @@ export default function AdicionalCardapioForm({
               name: itemValue.nome
             } : undefined}
             onChange={(value) => {
-              setValue("item.id", value?.key);
-              setValue("item.nome", value?.name);
+              setValue("item.id", value.key);
+              setValue("item.nome", value.name);
             }
           }></ItemSearch>
         </FormField>

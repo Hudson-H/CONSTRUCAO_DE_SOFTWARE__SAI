@@ -7,6 +7,5 @@ export default interface IItemEstoque {
   tipoUnidade: {
     id: string;
     nome: string;
-    sigla: string;
   };
 }

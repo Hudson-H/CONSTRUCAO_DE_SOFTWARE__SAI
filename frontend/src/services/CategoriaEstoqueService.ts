@@ -80,6 +80,18 @@ const CategoriaEstoqueService = {
     } catch (err) {
       throw handleApiAxiosError(err, "Ocorreu um erro ao tentar deletar a categoria de estoque");
     }
+  },
+
+  search: async (search: string): Promise<ICategoriaEstoque[]> => {
+    return categoriaEstoqueData.filter(categoria => categoria.nome.toLowerCase().includes(search.toLowerCase()));
+
+    try {
+      const response = await api.get(`/estoque/categoria/search?search=${search}`);
+
+      return response.data;
+    } catch (err) {
+      throw handleApiAxiosError(err, "Ocorreu um erro ao tentar buscar o categoria de estoque");
+    }
   }
 }
 
