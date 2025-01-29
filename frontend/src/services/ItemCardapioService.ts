@@ -19,7 +19,7 @@ let itemCardapioData: IItemCardapio[] = [
           nome: "Item 1",
           unidadeMedida: "Un"
         },
-        quatidade: 1
+        quantidade: 1
       }
     ]
   },

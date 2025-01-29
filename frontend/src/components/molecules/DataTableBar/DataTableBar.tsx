@@ -26,7 +26,7 @@ export function DataTableBar({ title, newButtonLink, className }: DataTableBarPr
     <Title>{title}</Title>
     <div className="flex gap-4 items-center h-8">
       <Input
-    type="text"
+        type="text"
         value={searchValue}
         onChange={handleSearch}
         placeholder={

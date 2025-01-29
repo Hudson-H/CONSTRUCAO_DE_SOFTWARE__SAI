@@ -5,7 +5,7 @@ type InputProps = {
   type: HTMLInputTypeAttribute | "currency";
   disabled?: boolean;
   placeholder: string;
-  value: string;
+  value: string | number;
   className?: string;
   borderless?: boolean;
   icon?: ReactNode;
@@ -39,6 +39,7 @@ export default function Input({ type, disabled, placeholder, value, borderless, 
           decimalsLimit={2}
           fixedDecimalLength={2}
           allowNegativeValue={false}
+          value={value}
           onValueChange={(value) => {
             onChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)
           }}
@@ -55,7 +56,12 @@ export default function Input({ type, disabled, placeholder, value, borderless, 
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          className="w-full h-full leading-normal tracking-wider font-roboto text-justify outline-none select-none overflow-y-visible"
+          className="
+            w-full h-full
+            leading-normal tracking-wider font-roboto text-justify
+            outline-none select-none overflow-y-visible
+            font-light
+          "
         />
       }
   </div>

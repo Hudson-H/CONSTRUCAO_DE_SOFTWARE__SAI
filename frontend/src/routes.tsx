@@ -8,6 +8,7 @@ import { Cardapio } from './views/cardapio/Cardapio';
 import { Pedido } from './views/pedido/Pedido';
 import { Estoque } from './views/estoque/Estoque';
 import { NovoItemCardapio } from './views/cardapio/item/novo/NovoItemCardapio';
+import { EditarItemCardapio } from './views/cardapio/item/editar/EditarItemCardapio';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<>
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
         <Route path="" element={<Cardapio/>}></Route>
         <Route path="item">
           <Route path="novo" element={<NovoItemCardapio/>}></Route>
+          <Route path=":id" element={<EditarItemCardapio/>}></Route>
         </Route>
       </Route>
       <Route path="/pedido" element={<Pedido/>}></Route>

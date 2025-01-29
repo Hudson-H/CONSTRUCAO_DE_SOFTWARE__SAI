@@ -5,5 +5,5 @@ export default interface IItemCardapio {
   nome: string;
   valor: number;
   descricao: string;
-  compostoPor: { item: IItemEstoque, quatidade: number }[];
+  compostoPor: { item: IItemEstoque, quantidade: number }[];
 }

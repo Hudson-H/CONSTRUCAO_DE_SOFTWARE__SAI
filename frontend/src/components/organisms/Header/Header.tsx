@@ -48,14 +48,14 @@ export function Header() {
       </TrackingButtton>
     </div>
 
-    <div className="flex gap-4">
+    <div className="flex gap-4 items-center">
       <span>
-        <Label className="font-extralight">Olá, </Label>
-        {user && <Label>{user.name}</Label>}
+        <Label className="font-extralight text-lg">Olá, </Label>
+        {user && <Label className="text-lg">{user.name}</Label>}
       </span>
       <span data-tooltip-id="tooltip-controller" data-tooltip-content="Logout!">
         <Button
-          icon={<SignOut size={12} weight="bold"/>}
+          icon={<SignOut size={16} weight="bold"/>}
           color={"gray"}
           children={undefined}
           className=""
