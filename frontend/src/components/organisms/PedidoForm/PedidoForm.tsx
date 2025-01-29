@@ -48,6 +48,8 @@ export default function PedidoForm({ data, onSubmit }: PedidoFormProps) {
     []
   );
 
+  const totalPrice = itemData.reduce((prev, cur) => prev += (cur?.price)??0, 0)
+
   useEffect(() => {
     if (data?.items) {
       setItemData(
@@ -113,6 +115,12 @@ export default function PedidoForm({ data, onSubmit }: PedidoFormProps) {
             setItemData(list);
           }}
         ></SearchList>
+        <div className="w-full pt-2 flex justify-end">
+          <Label className="text-2xl">Total: {totalPrice.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          })}</Label>
+        </div>
       </FormField>
 
       <Label className="col-span-4">Informações Adicionais:</Label>

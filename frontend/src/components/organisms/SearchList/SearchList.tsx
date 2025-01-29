@@ -1,8 +1,9 @@
-import { CaretLeft, CaretRight, MagnifyingGlassPlus } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight, MagnifyingGlassPlus, Trash } from "@phosphor-icons/react";
 import Input from "../../atoms/Input/Input";
 import { Label } from "../../atoms/Label/Label";
 import { FormEvent, useState } from "react";
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
+import { textColors } from "../../../utils/style/TextColor";
 
 export type SearchListRow = {
   key: string;
@@ -75,6 +76,12 @@ export default function SearchList({
     onChange([...items]);
   }
 
+  async function removeItem(item: SearchListRow) {
+    items = items.filter(val => val !== item);
+
+    onChange([...items]);
+  }
+
   return <div className="flex flex-col w-full min-h-64 px-4 pt-2 py-6 rounded border-2 mt-2">
     {items.length > 0 ?
       items.map((item, index) => {
@@ -99,7 +106,10 @@ export default function SearchList({
               <CaretRight className="cursor-pointer" onClick={(ev) => {
                 changeQuantity(item, "add");
               }}/>
-            </div> : null
+            </div> :
+            <Trash onClick={(ev) => {
+              removeItem(item);
+            }} className={`${textColors["red"]} cursor-pointer`} size={24} />
           }
         </div>
       })
