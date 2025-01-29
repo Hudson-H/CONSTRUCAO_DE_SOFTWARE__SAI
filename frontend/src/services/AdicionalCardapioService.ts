@@ -2,22 +2,20 @@ import { api } from "../lib/axios";
 import { handleApiAxiosError } from "../utils/errorHandledRequest";
 import IAdicionalCardapio from "../utils/interfaces/adicionalCardapio";
 
+let UUID = 0;
+type AddAdicionalCardapioRequest = Omit<IAdicionalCardapio, "id">;
+
 let adicionalCardapioData: IAdicionalCardapio[] = [
   {
     id: "0",
     nome: "Adicional 1",
     valor: 10,
+    item: {
+      id: "0",
+      nome: "Item 1",
+    },
+    quantidade: 1
   },
-  {
-    id: "1",
-    nome: "Adicional 2",
-    valor: 20,
-  },
-  {
-    id: "2",
-    nome: "Adicional 3",
-    valor: 30,
-  }
 ]
 
 const AdicionalCardapioService = {
@@ -45,8 +43,11 @@ const AdicionalCardapioService = {
     }
   },
 
-  add: async (adicional: IAdicionalCardapio): Promise<IAdicionalCardapio> => {
-    adicionalCardapioData.unshift(adicional);
+  add: async (adicional: AddAdicionalCardapioRequest): Promise<IAdicionalCardapio> => {
+    adicionalCardapioData.unshift({
+      id: (UUID++).toString(),
+      ...adicional,
+    });
     return adicionalCardapioData[0];
 
     try {

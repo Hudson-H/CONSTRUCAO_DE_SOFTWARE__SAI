@@ -1,10 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import IItemCardapio from "../../../utils/interfaces/itemCardapio";
-import { SearchListRow } from "../SearchList/SearchList";
 import Input from "../../atoms/Input/Input";
 import Button from "../../atoms/Button/Button";
 import { Label } from "../../atoms/Label/Label";
@@ -104,7 +102,7 @@ export default function SecaoCardapioForm({
           outline
           onClick={(ev) => {
             ev.preventDefault();
-            navigate("/cardapio?category=item")
+            navigate("/cardapio?category=secao")
           }}
         >
           <Label light className="w-full">

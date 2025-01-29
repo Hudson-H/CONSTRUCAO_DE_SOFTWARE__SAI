@@ -16,10 +16,7 @@ let itemCardapioData: IItemCardapio[] = [
       {
         item: {
           id: "0",
-          categoria: "Categoria 1",
-          descricao: "Descrição do item 1",
           nome: "Item 1",
-          unidadeMedida: "Un"
         },
         quantidade: 1
       }

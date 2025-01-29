@@ -154,7 +154,7 @@ export default function ItemCardapioForm({
 
             debounce(async () => {
               const response = await ItemEstoqueService.search(search);
-              console.log(response);
+
               setSearchData(
                 response.map((item) => {
                   return {

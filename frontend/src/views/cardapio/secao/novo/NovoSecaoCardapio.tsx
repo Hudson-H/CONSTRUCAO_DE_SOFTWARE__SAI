@@ -14,7 +14,7 @@ export function NovoSecaoCardapio() {
         descricao,
       });
 
-      toast.info("Item adicionado com sucesso!");
+      toast.info("Seção adicionado com sucesso!");
       navigate(`/cardapio?category=secao`);
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);
